@@ -108,4 +108,7 @@ hs_err_pid*
 # ignore .iml files
 *.iml
 
+# ignore .docx files
+*.docx
+
 # End of https://www.gitignore.io/api/java,intellij
