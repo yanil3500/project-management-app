@@ -13,6 +13,10 @@ public class Lane implements Drawable {
 
     }
 
+    public void deletePanel(int index) {
+
+    }
+
     @Override
     public void draw(Graphics g) {
 
