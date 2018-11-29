@@ -9,7 +9,7 @@ public class Lane implements Drawable {
         this.panels = new ArrayList<>();
     }
 
-    public void addPanel() {
+    public void addPanel(Panel panel) {
 
     }
 
