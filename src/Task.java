@@ -9,8 +9,9 @@ public class Task {
     private ArrayList<Note> notes;
     private Metadata metadata;
 
-    public Task(String title){
+    public Task(String title) {
         this.title = title;
+        this.metadata = new Metadata();
     }
 
     public String getAuthor() {
@@ -54,18 +55,18 @@ public class Task {
     }
 
     public Metadata getMetadata() {
-        return metadata;
+        return new Metadata(metadata);
     }
 
-    public void editMetadata(Metadata metadata) {
-        this.metadata = metadata;
+    public void updateMetadata() {
+        this.metadata.updateLastModified();
     }
 
-    public void addNote(String note){
+    public void addNote(String note) {
 
     }
 
-    public void deleteNote(int index){
+    public void deleteNote(int index) {
 
     }
 
