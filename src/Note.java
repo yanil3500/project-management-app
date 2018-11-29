@@ -1,8 +1,16 @@
+import java.io.Serializable;
+
 /**
  * An instance of the <code>Note</code> class represents a note related to a specific task, and can provide more
  * information about the nature/current status/etc. of the task.
  */
-class Note {
+
+/**
+ * NOTE: This class implements Serializable so that these types of objects can be converted into a byte stream
+ * and saved onto disk.
+ */
+
+class Note implements Serializable {
 
     /**
      * The name of the note's creator. This field can be left blank.
