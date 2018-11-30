@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Lane implements Drawable {
 
@@ -7,7 +8,7 @@ public class Lane implements Drawable {
      * Used for keeping track of all panels used by all of the Lane instances.
      * This will be used for persisting all of those panels to disk.
      */
-    private static ArrayList<Panel> allPanels = new ArrayList<>();
+    private static HashSet<Panel> allPanels = new HashSet<>();
 
     private ArrayList<Panel> panels;
 
