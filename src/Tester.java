@@ -18,6 +18,7 @@ public class Tester {
 
     public static void main(String[] args) {
         testPanelSavesAndLoadsToAndFromDisk();
+        testPanelsAreSavedInResponseToMovingThroughLanes();
     }
 
     /**
@@ -51,6 +52,42 @@ public class Tester {
 
         System.out.println("(Task objects) t1 == t2: " + assertFunc(t1, t2));
         System.out.println("(Panel objects) p1 == p2: " + assertFunc(p1, p2));
+    }
+
+    public static void testPanelsAreSavedInResponseToMovingThroughLanes() {
+        //Creates dummy tasks for Panel and sets its fields.
+        Task t1 = new Task("Work on cracking the coding interview.");
+        t1.setAuthor("Berner Herzog");
+        t1.editAssignedTo("Rusty Shackleford");
+        t1.editDeadline("12 Dec 2018");
+        t1.editDescription("Work on a practice problem everyday!");
+
+        Task t2 = new Task("Apply for internships.");
+        t2.setAuthor("Berner Herzog");
+        t2.editAssignedTo("Berner Herzog");
+        t2.editDeadline("12 Dec 2018");
+        t2.editDescription("Look on indeed.com for internship opportunities!");
+
+        //Creates dummy panels
+        Panel p1 = new Panel(t1);
+        Panel p2 = new Panel(t2);
+
+        //Create lanes
+        Lane toDo = new Lane();
+        Lane inProgress = new Lane();
+        Lane completed = new Lane();
+
+        //Move the panel through the lanes.
+        toDo.addPanel(p1);
+        toDo.addPanel(p2);
+        toDo.deletePanel(0);
+        inProgress.addPanel(p1);
+        toDo.deletePanel(0);
+        inProgress.addPanel(p2);
+        inProgress.deletePanel(1);
+        completed.addPanel(p2);
+        inProgress.deletePanel(0);
+        completed.addPanel(p1);
     }
 
     /**
