@@ -71,7 +71,7 @@ public class Task extends Observable implements Serializable {
     /**
      * Gets the name of the task's creator.
      *
-     * @return
+     * @return String.
      */
     public String getAuthor() {
         return author;
@@ -131,7 +131,7 @@ public class Task extends Observable implements Serializable {
     /**
      * Get the task's description.
      *
-     * @return
+     * @return String.
      */
     public String getDescription() {
         return description;
@@ -151,7 +151,7 @@ public class Task extends Observable implements Serializable {
     /**
      * Gets the task's deadline.
      *
-     * @return
+     * @return String.
      */
     public String getDeadline() {
         return deadline;
