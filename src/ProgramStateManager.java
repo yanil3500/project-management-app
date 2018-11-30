@@ -4,7 +4,13 @@ import java.util.List;
 
 
 /**
- * The <code>ProgramStateManager</code> is used for saving/loading the program's state to/from a file (disk).
+ * The <code>ProgramStateManager</code> is used for saving/loading the program's state to/from disk.
+ */
+
+/**
+ * NOTE: This Stackoverflow question was referenced while this class's methods were being defined. The bit about
+ * using null as way to indicate that no more objects to read in was very helpful.
+ * Link: https://stackoverflow.com/questions/12684072/eofexception-when-reading-files-with-objectinputstream
  */
 public class ProgramStateManager {
 
@@ -14,7 +20,7 @@ public class ProgramStateManager {
     private static String FILE_NAME = "program-state.txt";
 
     /**
-     * Converts the objects into a byte stream and writes it to a file (disk).
+     * Converts the objects into a byte stream and writes it to a file.
      *
      * @param objects
      */
