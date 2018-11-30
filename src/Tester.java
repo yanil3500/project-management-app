@@ -4,17 +4,26 @@ import java.util.stream.Stream;
 
 /**
  * The <code>Tester</code> class is used for testing the code written for this project.
+ * To test any aspect of the code, define a static method for the aspect of code under test.
+ * Every static method used for testing code should follow this naming convention: test<aspect of code>.
+ * Call the newly defined static method in main to run the test.
  */
 public class Tester {
 
+    /**
+     * The default constructor is being set to private so that no Tester instances can be created.
+     */
+    private Tester() {
+    }
+
     public static void main(String[] args) {
-        testPanelSavesToDisk();
+        testPanelSavesAndLoadsToAndFromDisk();
     }
 
     /**
      * Tests that Panel objects and their member variables are correctly being saved/loaded correctly to/from disk.
      */
-    public static void testPanelSavesToDisk() {
+    public static void testPanelSavesAndLoadsToAndFromDisk() {
 
         //Creates a dummy task for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
@@ -42,6 +51,7 @@ public class Tester {
 
     /**
      * Checks that given objects are equal to one another.
+     *
      * @param o1
      * @param o2
      * @return
