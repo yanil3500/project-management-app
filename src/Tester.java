@@ -1,6 +1,5 @@
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 /**
  * The <code>Tester</code> class is used for testing the code written for this project.
@@ -38,14 +37,18 @@ public class Tester {
         t1.editDescription("Work on a practice problem everyday!");
         ProgramStateManager.getInstance().save(Stream.of(p1).collect(Collectors.toList()));
 
-        //Panel reference that will hold object loaded from disk.
+        //Panel reference that will hold the object loaded from disk.
         Panel p2 = null;
 
         //Checks if there is a saved state from a previous run.
         if (ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //Loads panel from disk.
-            List<Object> fromProgramStateFile = ProgramStateManager.getInstance().load();
-            p2 = (Panel) fromProgramStateFile.get(0);
+            List<Panel> fromProgramStateFile = ProgramStateManager.getInstance()
+                    .load()
+                    .stream()
+                    .map(object -> (Panel) object)
+                    .collect(Collectors.toList());
+            p2 = fromProgramStateFile.get(0);
         }
 
         //Gets the task from the Panel that was saved to disk.
