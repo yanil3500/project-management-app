@@ -62,7 +62,7 @@ class Note implements Serializable {
     }
 
     /**
-     * Changes the note with given text
+     * Changes the note with given text.
      * @param text
      */
     public void editNote(String text) {
@@ -72,6 +72,10 @@ class Note implements Serializable {
         this.text = text;
     }
 
+    /**
+     * Sets the name of the note's creator.
+     * @param text
+     */
     public void setAuthor(String text) {
         if (text == null || text.equals("")) {
             return;
