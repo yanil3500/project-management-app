@@ -18,8 +18,8 @@ public class Tester {
 
     public static void main(String[] args) {
         testPanelSavesAndLoadsToAndFromDisk();
-        testPanelsAreSavedInResponseToMovingThroughLanes();
-        testTasksAreSavedInResponseToChange();
+        testPanelsAreSavedWhenMovingThroughLanes();
+        testTasksAreSavedWhenChanged();
     }
 
     /**
@@ -56,7 +56,7 @@ public class Tester {
         System.out.println("(Panel objects) p1 == p2: " + assertEquals(p1, p2));
     }
 
-    public static void testPanelsAreSavedInResponseToMovingThroughLanes() {
+    public static void testPanelsAreSavedWhenMovingThroughLanes() {
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         t1.setAuthor("Berner Herzog");
@@ -79,7 +79,7 @@ public class Tester {
         Lane inProgress = new Lane();
         Lane completed = new Lane();
 
-        System.out.println("testPanelsAreSavedInResponseToMovingThroughLanes: ");
+        System.out.println("testPanelsAreSavedWhenMovingThroughLanes: ");
         //Move the panels through the lanes.
         toDo.addPanel(p1);
         toDo.addPanel(p2);
@@ -93,7 +93,7 @@ public class Tester {
         completed.addPanel(p1);
     }
 
-    public static void testTasksAreSavedInResponseToChange(){
+    public static void testTasksAreSavedWhenChanged(){
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         Task t2 = new Task("Apply for internships.");
@@ -110,7 +110,7 @@ public class Tester {
         toDo.addPanel(p2);
 
         //Updates tasks
-        System.out.println("testTasksAreSavedInResponseToChange: ");
+        System.out.println("testTasksAreSavedWhenChanged: ");
         t1.setAuthor("Berner Herzog");
         t1.editAssignedTo("Rusty Shackleford");
         t1.editDeadline("12 Dec 2018");
