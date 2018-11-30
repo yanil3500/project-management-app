@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Observable;
 
+
+/**
+ * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
+ * that their state has changed.
+ */
 public class Lane extends Observable implements Drawable {
 
     /**
@@ -13,13 +18,13 @@ public class Lane extends Observable implements Drawable {
      */
     private static HashSet<Panel> allPanels = new HashSet<>();
 
+    private ArrayList<Panel> panels;
+
     public Lane() {
         this.panels = new ArrayList<>();
         //Adds the ProgramStateManager as an observer to monitor any changes in this lane.
         this.addObserver(ProgramStateManager.getInstance());
     }
-
-    private ArrayList<Panel> panels;
 
     /**
      * Gets all of the panels from across all lanes instances.

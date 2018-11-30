@@ -1,15 +1,26 @@
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.*;
+
 
 /**
  * A <code>Task</code> represents a piece of work that a user has set for themselves (or somebody else) to complete.
  */
 
 /**
- * NOTE: This class implements Serializable so that these types of objects can be converted into a byte stream
+ * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
+ * <p>
+ * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
+ * that their state has changed.
  */
-public class Task implements Serializable {
+public class Task extends Observable implements Serializable {
+
+    /**
+     * Used for keeping track of all task instances.
+     * This will be used for persisting any task changes to disk.
+     */
+    private static HashSet<Task> allTasks = new HashSet<>();
+
     /**
      * The name of the task's creator. This field can be left blank.
      */
@@ -46,10 +57,25 @@ public class Task implements Serializable {
      */
     private Metadata metadata;
 
+    /**
+     * The panel to which the task is attached.
+     */
+    private Panel panel;
+
+    /**
+     * This is the default constructor. The only argument required to create a Task instance is its title.
+     *
+     * @param title
+     */
+
     public Task(String title) {
         this.title = title;
         this.metadata = new Metadata();
         this.notes = new ArrayList<>();
+        //Adds the ProgramStateManager as an observer to monitor any changes in this task.
+        this.addObserver(ProgramStateManager.getInstance());
+        //Adds this Task instance to the set of all Tasks
+        allTasks.add(this);
     }
 
     /**
@@ -165,7 +191,17 @@ public class Task implements Serializable {
      * Updates the last modified date to reflect that the task has been changed.
      */
     private void updateMetadata() {
+
+        //Indicates that the task has been changed.
+        setChanged();
+
         this.metadata.updateLastModified();
+
+        //This task notifies the ProgramStateManager of its latest change.
+        notifyObservers();
+
+        //Indicates that the task has already notified the ProgramStateManager of its latest change.
+        clearChanged();
     }
 
     /**
@@ -221,6 +257,36 @@ public class Task implements Serializable {
         notes.remove(index);
         //Update the last modified date to indicate that the task has been changed
         updateMetadata();
+    }
+
+    /**
+     * Will set the author for the note at the given index if and only if the setAuthor boolean is true;
+     * Otherwise, the text of the note will be edited.
+     * @param text
+     * @param index
+     * @param setAuthor
+     */
+    public void editNote(String text, int index, boolean setAuthor){
+        if (index < 0 || index > notes.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        Note note = notes.get(index);
+        if (setAuthor) {
+            note.setAuthor(text);
+        } else {
+            note.editNote(text);
+        }
+        //Update the last modified date to indicate that the task has been changed
+        updateMetadata();
+    }
+
+    /**
+     * Gets all of the instances of task.
+     *
+     * @return HashSet.
+     */
+    public static HashSet<Task> getAllTasks() {
+        return allTasks;
     }
 
     /**

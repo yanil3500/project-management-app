@@ -23,7 +23,7 @@ class Note implements Serializable {
     private String text;
 
     /**
-     * This is the default constructor.
+     * This is the default constructor. The only argument required to create a Note instance is its text.
      *
      * @param text
      */
@@ -59,5 +59,19 @@ class Note implements Serializable {
      */
     public String getText() {
         return text;
+    }
+
+    public void editNote(String text){
+        if (text == null || text.equals("")) {
+            return;
+        }
+        this.text = text;
+    }
+
+    public void setAuthor(String text){
+        if (text == null || text.equals("")){
+            return;
+        }
+        this.author = author;
     }
 }
