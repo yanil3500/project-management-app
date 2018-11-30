@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  * using null as way to indicate that there are no more objects to read in was very helpful.
  * Link: https://stackoverflow.com/questions/12684072/eofexception-when-reading-files-with-objectinputstream
  */
-public class ProgramStateManager {
+public class ProgramStateManager implements Observer {
 
     /**
      * Single instance of ProgramStateManager
@@ -93,5 +95,12 @@ public class ProgramStateManager {
      */
     public boolean doesPreviousStateExist() {
         return file.isFile();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("The board has changed! Time to save its state!");
+        List<Object> panels = new ArrayList<>(Lane.getAllPanels());
+        save(panels);
     }
 }
