@@ -10,8 +10,11 @@ import java.util.*;
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
  *
- * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
+ * NOTE about Observable: This class extends the Observable class so that these types objects can notify the ProgramStateManager
  * that their state has changed.
+ *
+ * The Oracle docs for the Observable class were used during implementation.
+ * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
 public class Task extends Observable implements Serializable {
 
