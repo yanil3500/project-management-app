@@ -246,8 +246,7 @@ public class Task implements Serializable {
             return false;
         if (getDeadline() != null ? !getDeadline().equals(task.getDeadline()) : task.getDeadline() != null)
             return false;
-        if (notes != null ? !notes.equals(task.notes) : task.notes != null) return false;
-        return getMetadata().equals(task.getMetadata());
+        return notes != null ? notes.equals(task.notes) : task.notes == null;
     }
 
     /**
@@ -264,7 +263,7 @@ public class Task implements Serializable {
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getDeadline() != null ? getDeadline().hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
-        result = 31 * result + getMetadata().hashCode();
         return result;
     }
+
 }
