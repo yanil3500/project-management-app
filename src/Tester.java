@@ -27,15 +27,15 @@ public class Tester {
      */
     public static void testPanelSavesAndLoadsToAndFromDisk() {
 
-        //Creates a dummy task for Panel and sets its fields.
+        //Creates a dummy task for Panel.
         Task t1 = new Task("Work on cracking the coding interview.");
+
+        //Creates panel and saves it to disk.
+        Panel p1 = new Panel(t1);
         t1.setAuthor("Berner Herzog");
         t1.editAssignedTo("Rusty Shackleford");
         t1.editDeadline("12 Dec 2018");
         t1.editDescription("Work on a practice problem everyday!");
-
-        //Creates panel and saves it to disk.
-        Panel p1 = new Panel(t1);
         ProgramStateManager.getInstance().save(Stream.of(p1).collect(Collectors.toList()));
 
         //Panel reference that will hold object loaded from disk.
@@ -51,6 +51,7 @@ public class Tester {
         //Gets the task from the Panel that was saved to disk.
         Task t2 = p2.getTask();
 
+        System.out.println("testPanelSavesAndLoadsToAndFromDisk");
         System.out.println("(Task objects) t1 == t2: " + assertEquals(t1, t2));
         System.out.println("(Panel objects) p1 == p2: " + assertEquals(p1, p2));
     }
@@ -73,11 +74,12 @@ public class Tester {
         Panel p1 = new Panel(t1);
         Panel p2 = new Panel(t2);
 
-        //Create lanes
+        //Create dummy lanes
         Lane toDo = new Lane();
         Lane inProgress = new Lane();
         Lane completed = new Lane();
 
+        System.out.println("testPanelsAreSavedInResponseToMovingThroughLanes: ");
         //Move the panels through the lanes.
         toDo.addPanel(p1);
         toDo.addPanel(p2);
@@ -94,12 +96,26 @@ public class Tester {
     public static void testTasksAreSavedInResponseToChange(){
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
+        Task t2 = new Task("Apply for internships.");
+
+        //Creates dummy panels
+        Panel p1 = new Panel(t1);
+        Panel p2 = new Panel(t2);
+
+        //Create dummy lanes
+        Lane toDo = new Lane();
+
+        //Add panels to lane
+        toDo.addPanel(p1);
+        toDo.addPanel(p2);
+
+        //Updates tasks
+        System.out.println("testTasksAreSavedInResponseToChange: ");
         t1.setAuthor("Berner Herzog");
         t1.editAssignedTo("Rusty Shackleford");
         t1.editDeadline("12 Dec 2018");
         t1.editDescription("Work on a practice problem everyday!");
 
-        Task t2 = new Task("Apply for internships.");
         t2.setAuthor("Berner Herzog");
         t2.editAssignedTo("Berner Herzog");
         t2.editDeadline("12 Dec 2018");
