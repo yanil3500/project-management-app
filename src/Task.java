@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
- * <p>
+ *
  * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
  * that their state has changed.
  */
