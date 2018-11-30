@@ -16,12 +16,6 @@ import java.util.*;
 public class Task extends Observable implements Serializable {
 
     /**
-     * Used for keeping track of all task instances.
-     * This will be used for persisting any task changes to disk.
-     */
-    private static HashSet<Task> allTasks = new HashSet<>();
-
-    /**
      * The name of the task's creator. This field can be left blank.
      */
     private String author;
@@ -74,8 +68,6 @@ public class Task extends Observable implements Serializable {
         this.notes = new ArrayList<>();
         //Adds the ProgramStateManager as an observer to monitor any changes in this task.
         this.addObserver(ProgramStateManager.getInstance());
-        //Adds this Task instance to the set of all Tasks
-        allTasks.add(this);
     }
 
     /**
@@ -278,15 +270,6 @@ public class Task extends Observable implements Serializable {
         }
         //Update the last modified date to indicate that the task has been changed
         updateMetadata();
-    }
-
-    /**
-     * Gets all of the instances of task.
-     *
-     * @return HashSet.
-     */
-    public static HashSet<Task> getAllTasks() {
-        return allTasks;
     }
 
     /**
