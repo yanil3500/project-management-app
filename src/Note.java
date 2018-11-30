@@ -6,7 +6,7 @@ import java.io.Serializable;
  */
 
 /**
- * NOTE: This class implements Serializable so that these types of objects can be converted into a byte stream
+ * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
  */
 

@@ -18,7 +18,7 @@ public class Tester {
     public static void main(String[] args) {
         testPanelSavesAndLoadsToAndFromDisk();
         testPanelsAreSavedWhenMovingThroughLanes();
-        testTasksAreSavedWhenChanged();
+        testPanelsAreSavedWhenAssociatedTasksChanged();
     }
 
     /**
@@ -59,6 +59,9 @@ public class Tester {
         System.out.println("(Panel objects) p1 == p2: " + assertEquals(p1, p2));
     }
 
+    /**
+     * Tests that Panel objects are saved to disk when moving through lanes.
+     */
     public static void testPanelsAreSavedWhenMovingThroughLanes() {
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
@@ -96,7 +99,10 @@ public class Tester {
         completed.addPanel(p1);
     }
 
-    public static void testTasksAreSavedWhenChanged(){
+    /**
+     * Tests that the Panel are saved to disk when their associated task is changed.
+     */
+    public static void testPanelsAreSavedWhenAssociatedTasksChanged(){
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         Task t2 = new Task("Apply for internships.");
@@ -113,7 +119,7 @@ public class Tester {
         toDo.addPanel(p2);
 
         //Updates tasks
-        System.out.println("testTasksAreSavedWhenChanged: ");
+        System.out.println("testPanelsAreSavedWhenAssociatedTasksChanged: ");
         t1.setAuthor("Berner Herzog");
         t1.editAssignedTo("Rusty Shackleford");
         t1.editDeadline("12 Dec 2018");
