@@ -34,13 +34,17 @@ public class Tester {
 
         //Creates panel and saves it to disk.
         Panel p1 = new Panel(t1);
-        ProgramStateManager.save(Stream.of(p1).collect(Collectors.toList()));
+        ProgramStateManager.getInstance().save(Stream.of(p1).collect(Collectors.toList()));
 
+        //Panel reference that will hold object loaded from disk.
+        Panel p2 = null;
 
-        //Loads panel from disk.
-        List<Object> fromProgramStateFile = ProgramStateManager.load();
-        Panel p2 = (Panel) fromProgramStateFile.get(0);
-
+        //Checks if there is a saved state from a previous run.
+        if (ProgramStateManager.getInstance().doesPreviousStateExist()) {
+            //Loads panel from disk.
+            List<Object> fromProgramStateFile = ProgramStateManager.getInstance().load();
+            p2 = (Panel) fromProgramStateFile.get(0);
+        }
 
         //Gets the task from the Panel that was saved to disk.
         Task t2 = p2.getTask();
