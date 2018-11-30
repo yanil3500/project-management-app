@@ -37,4 +37,22 @@ class Note implements Serializable {
         this.author = author;
         this.text = text;
     }
+
+    /**
+     * Gets the name of the note's author.
+     *
+     * @return
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Gets the note's text.
+     *
+     * @return
+     */
+    public String getText() {
+        return text;
+    }
 }
