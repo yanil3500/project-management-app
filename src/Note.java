@@ -22,12 +22,17 @@ class Note implements Serializable {
      */
     private String text;
 
+    /**
+     * This is the default constructor.
+     *
+     * @param text
+     */
     public Note(String text) {
         this.text = text;
     }
 
     /**
-     * This is convenience constructor. If the author the note decides to provide their name, then this constructor will
+     * This is convenience constructor. If the author of the note decides to provide their name, then this constructor will
      * be used for creating note.
      *
      * @param author
