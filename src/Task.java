@@ -187,7 +187,7 @@ public class Task extends Observable implements Serializable {
         //This task notifies the ProgramStateManager of its latest change.
         notifyObservers();
 
-        //Indicates that the task has already notified the ProgramStateManager of its latest change.
+        //Indicates that this task has already notified the ProgramStateManager of its latest change.
         clearChanged();
     }
 
@@ -197,9 +197,7 @@ public class Task extends Observable implements Serializable {
      * @param text
      */
     public void addNote(String text) {
-        if (text == null) {
-            return;
-        } else if (text.equals("")) {
+        if (text == null || text.equals("")) {
             return;
         } else {
             Note note = new Note(text);
@@ -217,9 +215,7 @@ public class Task extends Observable implements Serializable {
      * @param text
      */
     public void addNote(String author, String text) {
-        if (text == null || author == null) {
-            return;
-        } else if (text.equals("") || author.equals("")) {
+        if (text == null || author == null || text.equals("") || author.equals("")) {
             return;
         } else {
             Note note = new Note(author, text);
@@ -249,11 +245,12 @@ public class Task extends Observable implements Serializable {
     /**
      * Will set the author for the note at the given index if and only if the setAuthor boolean is true;
      * Otherwise, the text of the note will be edited.
+     *
      * @param text
      * @param index
      * @param setAuthor
      */
-    public void editNote(String text, int index, boolean setAuthor){
+    public void editNote(String text, int index, boolean setAuthor) {
         if (index < 0 || index > notes.size()) {
             throw new IndexOutOfBoundsException();
         }
