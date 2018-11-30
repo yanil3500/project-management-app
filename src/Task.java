@@ -52,11 +52,6 @@ public class Task extends Observable implements Serializable {
     private Metadata metadata;
 
     /**
-     * The panel to which the task is attached.
-     */
-    private Panel panel;
-
-    /**
      * This is the default constructor. The only argument required to create a Task instance is its title.
      *
      * @param title
