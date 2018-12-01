@@ -1,6 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -8,11 +7,17 @@ import java.util.List;
  */
 
 /**
- * NOTE: This Stackoverflow question was referenced while this class's methods were being defined. The bit about
+ * NOTE on Serialization and Deserialization: This Stackoverflow question was referenced while this class's methods were being defined. The bit about
  * using null as way to indicate that there are no more objects to read in was very helpful.
  * Link: https://stackoverflow.com/questions/12684072/eofexception-when-reading-files-with-objectinputstream
+ *
+ * NOTE on Observer: This class implements the Observer interface so that it can be notified of any changes to
+ * observable objects; In this case, the ProgramStateManager will monitor tasks on the board and will save their state if changed.
+ *
+ * The Oracle docs for the Observer interface were used during implementation.
+ * Link: https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
-public class ProgramStateManager {
+public class ProgramStateManager implements Observer {
 
     /**
      * Single instance of ProgramStateManager
@@ -93,5 +98,17 @@ public class ProgramStateManager {
      */
     public boolean doesPreviousStateExist() {
         return file.isFile();
+    }
+
+    /**
+     * This method is called anytime an Observable object is changed.
+     * @param o
+     * @param arg
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("The board has changed! Time to save its state!");
+        List<Object> panels = new ArrayList<>(Lane.getAllPanels());
+        save(panels);
     }
 }

@@ -1,6 +1,5 @@
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 /**
  * The <code>Tester</code> class is used for testing the code written for this project.
@@ -18,6 +17,8 @@ public class Tester {
 
     public static void main(String[] args) {
         testPanelSavesAndLoadsToAndFromDisk();
+        testPanelsAreSavedWhenMovingThroughLanes();
+        testPanelsAreSavedWhenAssociatedTasksChanged();
     }
 
     /**
@@ -25,32 +26,109 @@ public class Tester {
      */
     public static void testPanelSavesAndLoadsToAndFromDisk() {
 
-        //Creates a dummy task for Panel and sets its fields.
+        //Creates a dummy task for Panel.
+        Task t1 = new Task("Work on cracking the coding interview.");
+
+        //Creates panel and saves it to disk.
+        Panel p1 = new Panel(t1);
+        t1.setAuthor("Berner Herzog");
+        t1.editAssignedTo("Rusty Shackleford");
+        t1.editDeadline("12 Dec 2018");
+        t1.editDescription("Work on a practice problem everyday!");
+        ProgramStateManager.getInstance().save(Stream.of(p1).collect(Collectors.toList()));
+
+        //Panel reference that will hold the object loaded from disk.
+        Panel p2 = null;
+
+        //Checks if there is a saved state from a previous run.
+        if (ProgramStateManager.getInstance().doesPreviousStateExist()) {
+            //Loads panel from disk.
+            List<Panel> fromProgramStateFile = ProgramStateManager.getInstance()
+                    .load()
+                    .stream()
+                    .map(object -> (Panel) object)
+                    .collect(Collectors.toList());
+            p2 = fromProgramStateFile.get(0);
+        }
+
+        //Gets the task from the Panel that was saved to disk.
+        Task t2 = p2.getTask();
+
+        System.out.println("testPanelSavesAndLoadsToAndFromDisk");
+        System.out.println("(Task objects) t1 == t2: " + assertEquals(t1, t2));
+        System.out.println("(Panel objects) p1 == p2: " + assertEquals(p1, p2));
+    }
+
+    /**
+     * Tests that Panel objects are saved to disk when moving through lanes.
+     */
+    public static void testPanelsAreSavedWhenMovingThroughLanes() {
+        //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         t1.setAuthor("Berner Herzog");
         t1.editAssignedTo("Rusty Shackleford");
         t1.editDeadline("12 Dec 2018");
         t1.editDescription("Work on a practice problem everyday!");
 
-        //Creates panel and saves it to disk.
+        Task t2 = new Task("Apply for internships.");
+        t2.setAuthor("Berner Herzog");
+        t2.editAssignedTo("Berner Herzog");
+        t2.editDeadline("12 Dec 2018");
+        t2.editDescription("Look on indeed.com for internship opportunities!");
+
+        //Creates dummy panels
         Panel p1 = new Panel(t1);
-        ProgramStateManager.getInstance().save(Stream.of(p1).collect(Collectors.toList()));
+        Panel p2 = new Panel(t2);
 
-        //Panel reference that will hold object loaded from disk.
-        Panel p2 = null;
+        //Create dummy lanes
+        Lane toDo = new Lane();
+        Lane inProgress = new Lane();
+        Lane completed = new Lane();
 
-        //Checks if there is a saved state from a previous run.
-        if (ProgramStateManager.getInstance().doesPreviousStateExist()) {
-            //Loads panel from disk.
-            List<Object> fromProgramStateFile = ProgramStateManager.getInstance().load();
-            p2 = (Panel) fromProgramStateFile.get(0);
-        }
+        System.out.println("testPanelsAreSavedWhenMovingThroughLanes: ");
+        //Move the panels through the lanes.
+        toDo.addPanel(p1);
+        toDo.addPanel(p2);
+        toDo.deletePanel(0);
+        inProgress.addPanel(p1);
+        toDo.deletePanel(0);
+        inProgress.addPanel(p2);
+        inProgress.deletePanel(1);
+        completed.addPanel(p2);
+        inProgress.deletePanel(0);
+        completed.addPanel(p1);
+    }
 
-        //Gets the task from the Panel that was saved to disk.
-        Task t2 = p2.getTask();
+    /**
+     * Tests that the Panel are saved to disk when their associated task is changed.
+     */
+    public static void testPanelsAreSavedWhenAssociatedTasksChanged(){
+        //Creates dummy tasks for Panel and sets its fields.
+        Task t1 = new Task("Work on cracking the coding interview.");
+        Task t2 = new Task("Apply for internships.");
 
-        System.out.println("(Task objects) t1 == t2: " + assertFunc(t1, t2));
-        System.out.println("(Panel objects) p1 == p2: " + assertFunc(p1, p2));
+        //Creates dummy panels
+        Panel p1 = new Panel(t1);
+        Panel p2 = new Panel(t2);
+
+        //Create dummy lanes
+        Lane toDo = new Lane();
+
+        //Add panels to lane
+        toDo.addPanel(p1);
+        toDo.addPanel(p2);
+
+        //Updates tasks
+        System.out.println("testPanelsAreSavedWhenAssociatedTasksChanged: ");
+        t1.setAuthor("Berner Herzog");
+        t1.editAssignedTo("Rusty Shackleford");
+        t1.editDeadline("12 Dec 2018");
+        t1.editDescription("Work on a practice problem everyday!");
+
+        t2.setAuthor("Berner Herzog");
+        t2.editAssignedTo("Berner Herzog");
+        t2.editDeadline("12 Dec 2018");
+        t2.editDescription("Look on indeed.com for internship opportunities!");
     }
 
     /**
@@ -60,7 +138,7 @@ public class Tester {
      * @param o2
      * @return
      */
-    public static boolean assertFunc(Object o1, Object o2) {
+    public static boolean assertEquals(Object o1, Object o2) {
         return o1.equals(o2);
     }
 }
