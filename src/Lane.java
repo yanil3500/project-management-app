@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.*;
+import java.awt.event.MouseListener;
 
 
 /**
@@ -17,11 +18,20 @@ public class Lane extends Observable implements Drawable {
     private static HashSet<Panel> allPanels = new HashSet<>();
 
     private ArrayList<Panel> panels;
+    private int boardWidth;
+    private int boardHeight;
+    private String title;
+    private int margin;
+    private int xCoord;
+    private int yCoord;
+    private int xWidth;
+    private int yWidth;
 
     public Lane() {
         this.panels = new ArrayList<>();
         //Adds the ProgramStateManager as an observer to monitor any changes in this lane.
         this.addObserver(ProgramStateManager.getInstance());
+
     }
 
     /**
@@ -76,8 +86,34 @@ public class Lane extends Observable implements Drawable {
         clearChanged();
     }
 
+    public void setCoordinates(int initWidth, int initHeight, int numLane, String lane) {
+	
+	boardWidth = initWidth;
+	boardHeight = initHeight;
+	margin = boardWidth/13;
+	xCoord = margin + numLane*4*margin;
+	xWidth = 3*margin;
+	yCoord = margin;
+	yWidth = boardHeight - 2*margin;
+	title = lane;
+	
+    }
+
+    
     @Override
     public void draw(Graphics g) {
+
+	g.setColor(Color.WHITE);
+	g.fillRect(xCoord, yCoord, xWidth, yWidth);
+	g.setColor(Color.GRAY);
+	g.fillRect(xCoord, yCoord, xWidth, margin/2);
+	g.setColor(Color.BLACK);
+
+	Font font = new Font("Arial", Font.BOLD, 20);
+	int fontX = g.getFontMetrics(font).stringWidth(title);
+	int fontY = g.getFontMetrics(font).getAscent();
+	g.setFont(font);
+	g.drawString(title, xCoord + (xWidth-fontX)/2, yCoord + (margin/2 + fontY)/2);
 
     }
 }
