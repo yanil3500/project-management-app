@@ -12,21 +12,31 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     public static int WIDTH = 1024;
     public static int HEIGHT = 768;
     Board board;
-    JLabel[] Lanes;
+    JLabel[] LanePanels;
+    Lane[] Lanes;
+    Lane startLane;
+    Lane endLane;
+    Panel clickedPanel;
 
     public Main() {
 	board = new Board(WIDTH, HEIGHT);
 	this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	this.setLayout(null);
-	Lanes = new JLabel[3];
-	for (int i = 0; i < 3; i++) {
-	    Lanes[i] = new JLabel();
-	    add(Lanes[i]);
-	    Lanes[i].setLocation(WIDTH/13 + i*4*WIDTH/13, WIDTH/13);
-	    Lanes[i].setSize(3*WIDTH/13, HEIGHT - (2*WIDTH/13));
-	    Lanes[i].addMouseListener(this);
-	}
+	LanePanels = new JLabel[3];
+	Lanes = board.getLanes();
 	
+	for (int i = 0; i < 3; i++) {
+	    LanePanels[i] = new JLabel();
+	    add(LanePanels[i]);
+	    LanePanels[i].setLocation(WIDTH/13 + i*4*WIDTH/13, WIDTH/13);
+	    LanePanels[i].setSize(3*WIDTH/13, HEIGHT - (2*WIDTH/13));
+	    LanePanels[i].addMouseListener(this);
+
+	    for(Panel p : Lanes[i].getPanels()) {
+		add(p);
+		p.addMouseListener(this);
+	    }
+	}
     }
     
     public static void main(String[] args) {
@@ -64,6 +74,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     public void mouseClicked(MouseEvent e) {
 
 	System.out.println("clicked");
+        for (Panel p : startLane.getPanels()) {
+	    if (e.getSource() == p) {
+		clickedPanel = p;
+	    }
+	}
     }
 
     @Override
@@ -79,12 +94,15 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mouseEntered(MouseEvent e) {
 
-	if (e.getSource() == Lanes[0]) {
+	if (e.getSource() == LanePanels[0]) {
 	    System.out.println("to do lane");
-	} else if (e.getSource() == Lanes[1]) {
+	    startLane = Lanes[0];
+	} else if (e.getSource() == LanePanels[1]) {
 	    System.out.println("in progress lane");
-	} else if (e.getSource() == Lanes[2]) {
+	    startLane = Lanes[1];
+	} else if (e.getSource() == LanePanels[2]) {
 	    System.out.println("completed lane");
+	    startLane = Lanes[2];
 	}
     }
 
