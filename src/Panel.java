@@ -1,5 +1,5 @@
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 
 
@@ -9,6 +9,10 @@ import java.io.Serializable;
  */
 public class Panel extends JLabel implements Drawable, Serializable {
     private Task task;
+    /**
+     * The lane to which this panel currently belongs.
+     */
+    private String laneName;
     private int xPos;
     private int yPos;
     private int width;
@@ -19,44 +23,52 @@ public class Panel extends JLabel implements Drawable, Serializable {
     }
 
     public void updatePosition(int x, int y, int initWidth, int initHeight) {
-	xPos = x;
-	yPos = y;
-	width = initWidth;
-	height = initHeight;
-	this.setLocation(xPos, yPos);
-	this.setSize(width, height);
+        xPos = x;
+        yPos = y;
+        width = initWidth;
+        height = initHeight;
+        this.setLocation(xPos, yPos);
+        this.setSize(width, height);
+    }
+
+    public String getLaneName() {
+        return laneName;
+    }
+
+    public void setLaneName(String laneName) {
+        this.laneName = laneName;
     }
 
     public void setX(int x) {
-	xPos = x;
+        xPos = x;
     }
 
     public void setY(int y) {
-	yPos = y;
+        yPos = y;
     }
-    
+
     @Override
     public void draw(Graphics g) {
 
-	g.setColor(Color.LIGHT_GRAY);
-	g.fillRect(xPos, yPos, width, height);
-	String title = task.getTitle();
-	String author = task.getAuthor();
-	String description = task.getDescription();
-	
-	g.setColor(Color.BLACK);
-	Font font = new Font("TimesRoman", Font.PLAIN, 12);
-	int rise = g.getFontMetrics(font).getAscent();
-	g.setFont(font);
-	if (title != null) {
-	    g.drawString(title, xPos + 5, yPos + 5 + rise);
-	}
-	if (author != null) {
-	    g.drawString(author, xPos + 5, yPos + 10 + 2*rise);
-	}
-	if (description != null) {
-	    g.drawString(description, xPos + 5, yPos + 15 + 3*rise);
-	}
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(xPos, yPos, width, height);
+        String title = task.getTitle();
+        String author = task.getAuthor();
+        String description = task.getDescription();
+
+        g.setColor(Color.BLACK);
+        Font font = new Font("TimesRoman", Font.PLAIN, 12);
+        int rise = g.getFontMetrics(font).getAscent();
+        g.setFont(font);
+        if (title != null) {
+            g.drawString(title, xPos + 5, yPos + 5 + rise);
+        }
+        if (author != null) {
+            g.drawString(author, xPos + 5, yPos + 10 + 2 * rise);
+        }
+        if (description != null) {
+            g.drawString(description, xPos + 5, yPos + 15 + 3 * rise);
+        }
     }
 
     /**
