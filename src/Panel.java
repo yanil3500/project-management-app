@@ -27,6 +27,14 @@ public class Panel extends JLabel implements Drawable, Serializable {
 	this.setSize(width, height);
     }
 
+    public void setX(int x) {
+	xPos = x;
+    }
+
+    public void setY(int y) {
+	yPos = y;
+    }
+    
     @Override
     public void draw(Graphics g) {
 

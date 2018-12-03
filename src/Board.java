@@ -41,11 +41,13 @@ public class Board implements Drawable {
 	}
 	i = 0;
 	for(Panel p : inProgress.getPanels()) {
-	    p.updatePosition(5*margin + (3*margin)/10, 2*margin + i*2*margin, panelWidth, panelHeight);
+	    p.updatePosition(5*margin + (3*margin)/10, 2*margin + i*3*margin/2, panelWidth, panelHeight);
+	    i += 1;
 	}
 	i = 0;
 	for(Panel p : completed.getPanels()) {
-	    p.updatePosition(9*margin + (3*margin)/10, 2*margin + i*2*margin, panelWidth, panelHeight);
+	    p.updatePosition(9*margin + (3*margin)/10, 2*margin + i*3*margin/2, panelWidth, panelHeight);
+	    i+=1; 
 	}
     }
 	
