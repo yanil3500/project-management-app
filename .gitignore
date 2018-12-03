@@ -117,4 +117,7 @@ hs_err_pid*
 # ignore program-state.txt
 program-state.txt
 
+# ignore README_FOR_PROTOTYPE
+README_FOR_PROTOTYPE.txt
+
 # End of https://www.gitignore.io/api/java,intellij
