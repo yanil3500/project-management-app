@@ -1,4 +1,5 @@
 import java.awt.*;
+import javax.swing.*;
 import java.io.Serializable;
 
 
@@ -6,20 +7,48 @@ import java.io.Serializable;
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
  */
-public class Panel implements Drawable, Serializable {
+public class Panel extends JLabel implements Drawable, Serializable {
     private Task task;
+    private int xPos;
+    private int yPos;
+    private int width;
+    private int height;
 
     public Panel(Task task) {
         this.task = task;
     }
 
-    public void movePanel(Lane lane) {
-
+    public void updatePosition(int x, int y, int initWidth, int initHeight) {
+	xPos = x;
+	yPos = y;
+	width = initWidth;
+	height = initHeight;
+	this.setLocation(xPos, yPos);
+	this.setSize(width, height);
     }
 
     @Override
     public void draw(Graphics g) {
 
+	g.setColor(Color.LIGHT_GRAY);
+	g.fillRect(xPos, yPos, width, height);
+	String title = task.getTitle();
+	String author = task.getAuthor();
+	String description = task.getDescription();
+	
+	g.setColor(Color.BLACK);
+	Font font = new Font("TimesRoman", Font.PLAIN, 12);
+	int rise = g.getFontMetrics(font).getAscent();
+	g.setFont(font);
+	if (title != null) {
+	    g.drawString(title, xPos + 5, yPos + 5 + rise);
+	}
+	if (author != null) {
+	    g.drawString(author, xPos + 5, yPos + 10 + 2*rise);
+	}
+	if (description != null) {
+	    g.drawString(description, xPos + 5, yPos + 15 + 3*rise);
+	}
     }
 
     /**

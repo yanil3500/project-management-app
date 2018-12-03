@@ -48,6 +48,7 @@ public class Lane extends Observable implements Drawable {
      *
      * @param panel
      */
+    
     public void addPanel(Panel panel) {
         //Indicates that the lane has been changed.
         setChanged();
@@ -99,6 +100,9 @@ public class Lane extends Observable implements Drawable {
 	
     }
 
+    public ArrayList<Panel> getPanels() {
+	return panels;
+    }
     
     @Override
     public void draw(Graphics g) {
@@ -115,5 +119,8 @@ public class Lane extends Observable implements Drawable {
 	g.setFont(font);
 	g.drawString(title, xCoord + (xWidth-fontX)/2, yCoord + (margin/2 + fontY)/2);
 
+	for(Panel p : panels) {
+	    p.draw(g);
+	}
     }
 }
