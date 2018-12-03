@@ -1,5 +1,8 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -35,6 +38,11 @@ public class ProgramStateManager implements Observer {
     private File file = new File(FILE_NAME);
 
     /**
+     * Used to control when debugging output is print to stdout
+     */
+    private static boolean debug = true;
+
+    /**
      * The default constructor is being set to private so that no other ProgramStateManager instances can be created.
      */
     private ProgramStateManager() {
@@ -57,8 +65,12 @@ public class ProgramStateManager implements Observer {
     public void save(List<Object> objects) {
         /* Adding the null marks the end of objects to save to disk. This null will be useful when it comes
         time reload the program's state.*/
+
         if (objects == null) {
             throw new NullPointerException("The objects list argument is null.");
+        }
+        if (debug) {
+            System.out.println("Saving panels to disk...");
         }
         objects.add(null);
         try (FileOutputStream fos = new FileOutputStream(FILE_NAME); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -74,15 +86,18 @@ public class ProgramStateManager implements Observer {
      * Reads the byte stream from disk, feeds the byte stream to an ObjectInputStream, reads in an object from
      * the ObjectInputStream and adds it to a list until the end of the file is reached.
      *
-     * @return a List<Object>.
+     * @return a ArrayList<Panel>.
      */
-    public List<Object> load() {
-        List<Object> fromFile = new ArrayList<>();
+    public ArrayList<Panel> load() {
+        ArrayList<Panel> fromFile = new ArrayList<>();
+        if (debug) {
+            System.out.println("Loading panels from disk...");
+        }
         try (FileInputStream fis = new FileInputStream(FILE_NAME); ObjectInputStream ois = new ObjectInputStream(fis)) {
             Object o = ois.readObject();
             while (o != null) {
                 //if o == null, then the end of the file has been reached.
-                fromFile.add(o);
+                fromFile.add((Panel) o);
                 o = ois.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -107,8 +122,11 @@ public class ProgramStateManager implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("The board has changed! Time to save its state!");
+        if (debug) {
+            System.out.println("The board has changed! Time to save its state!");
+        }
         List<Object> panels = new ArrayList<>(Lane.getAllPanels());
         save(panels);
     }
+
 }
