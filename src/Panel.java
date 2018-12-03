@@ -98,6 +98,12 @@ public class Panel extends JLabel implements Drawable, Serializable {
         return this.task;
     }
 
+
+    /**
+     * Creates a panel instance with given task.
+     * @param taskTitle
+     * @return Panel.
+     */
     public static Panel createPanel(String taskTitle){
         if (taskTitle == null || !taskTitle.equals("")) {
             return null;
