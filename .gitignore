@@ -113,4 +113,8 @@ hs_err_pid*
 
 # ignore .pdf
 *.pdf
+
+# ignore program-state.txt
+program-state.txt
+
 # End of https://www.gitignore.io/api/java,intellij

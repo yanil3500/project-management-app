@@ -1,15 +1,9 @@
 import java.awt.*;
-import java.util.*;
-import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 
-/**
- * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
- * that their state has changed.
- * The Oracle docs for the Observable class were used during implementation.
- * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
- */
-public class Lane extends Observable implements Drawable {
+public class Lane implements Drawable {
 
     /**
      * Used for keeping track of all panels used by all of the Lane instances.
@@ -26,12 +20,27 @@ public class Lane extends Observable implements Drawable {
     private int yCoord;
     private int xWidth;
     private int yWidth;
+    private String laneName;
+    private ObservableHelper observable;
+
+    public Lane(String laneName) {
+        this.laneName = laneName;
+
+        this.panels = new ArrayList<>();
+        //Instantiates an ObservableHelper
+        observable = new ObservableHelper();
+        //Adds the ProgramStateManager as an observer to monitor any changes in this lane.
+        observable.addObserver(ProgramStateManager.getInstance());
+
+    }
+
 
     public Lane() {
-        this.panels = new ArrayList<>();
-        //Adds the ProgramStateManager as an observer to monitor any changes in this lane.
-        this.addObserver(ProgramStateManager.getInstance());
+        this("");
+    }
 
+    public String getLaneName() {
+        return laneName;
     }
 
     /**
@@ -48,10 +57,13 @@ public class Lane extends Observable implements Drawable {
      *
      * @param panel
      */
-    
+
     public void addPanel(Panel panel) {
         //Indicates that the lane has been changed.
-        setChanged();
+        observable.setChanged();
+
+        //Gives it name to each panel.
+        panel.setLaneName(this.laneName);
 
         //Adds panel to list of panels belonging to this lane.
         panels.add(panel);
@@ -60,10 +72,10 @@ public class Lane extends Observable implements Drawable {
         allPanels.add(panel);
 
         //This lane notifies the ProgramStateManager of its latest change.
-        notifyObservers();
+        observable.notifyObservers();
 
         //Indicates that the lane has already notified the ProgramStateManager of its latest change.
-        clearChanged();
+        observable.clearChanged();
     }
 
     public void deletePanel(int index) {
@@ -72,7 +84,7 @@ public class Lane extends Observable implements Drawable {
         }
 
         //Indicates that the lane has been changed.
-        setChanged();
+        observable.setChanged();
 
         //Remove from list of available panels.
         Panel toDelete = panels.remove(index);
@@ -81,46 +93,46 @@ public class Lane extends Observable implements Drawable {
         allPanels.remove(toDelete);
 
         //Notifies the ProgramStateManager that the lane has been changed.
-        notifyObservers();
+        observable.notifyObservers();
 
         //Indicates that the lane has already notified the ProgramStateManager of its latest change.
-        clearChanged();
+        observable.clearChanged();
     }
 
     public void setCoordinates(int initWidth, int initHeight, int numLane, String lane) {
-	
-	boardWidth = initWidth;
-	boardHeight = initHeight;
-	margin = boardWidth/13;
-	xCoord = margin + numLane*4*margin;
-	xWidth = 3*margin;
-	yCoord = margin;
-	yWidth = boardHeight - 2*margin;
-	title = lane;
-	
+
+        boardWidth = initWidth;
+        boardHeight = initHeight;
+        margin = boardWidth / 13;
+        xCoord = margin + numLane * 4 * margin;
+        xWidth = 3 * margin;
+        yCoord = margin;
+        yWidth = boardHeight - 2 * margin;
+        title = lane;
+
     }
 
     public ArrayList<Panel> getPanels() {
-	return panels;
+        return panels;
     }
-    
+
     @Override
     public void draw(Graphics g) {
 
-	g.setColor(Color.WHITE);
-	g.fillRect(xCoord, yCoord, xWidth, yWidth);
-	g.setColor(Color.GRAY);
-	g.fillRect(xCoord, yCoord, xWidth, margin/2);
-	g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
+        g.fillRect(xCoord, yCoord, xWidth, yWidth);
+        g.setColor(Color.GRAY);
+        g.fillRect(xCoord, yCoord, xWidth, margin / 2);
+        g.setColor(Color.BLACK);
 
-	Font font = new Font("Arial", Font.BOLD, 20);
-	int fontX = g.getFontMetrics(font).stringWidth(title);
-	int fontY = g.getFontMetrics(font).getAscent();
-	g.setFont(font);
-	g.drawString(title, xCoord + (xWidth-fontX)/2, yCoord + (margin/2 + fontY)/2);
+        Font font = new Font("Arial", Font.BOLD, 20);
+        int fontX = g.getFontMetrics(font).stringWidth(title);
+        int fontY = g.getFontMetrics(font).getAscent();
+        g.setFont(font);
+        g.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
 
-	for(Panel p : panels) {
-	    p.draw(g);
-	}
+        for (Panel p : panels) {
+            p.draw(g);
+        }
     }
 }
