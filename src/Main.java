@@ -67,9 +67,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             //Loads panels from disk
             ArrayList<Panel> panelsFromDisk = ProgramStateManager.getInstance().load();
             //Adds each panel back to its respective lane object
-            panelsFromDisk.stream().forEach(panel -> {
-                lanes.get(panel.getLaneName()).addPanel(panel);
-            });
+            panelsFromDisk.stream().forEach(panel -> lanes.get(panel.getLaneName()).addPanel(panel));
             for (int i = 0; i < 3; i++) {
                 LanePanels[i] = new JLabel();
                 add(LanePanels[i]);
