@@ -1,4 +1,5 @@
 import java.util.Observable;
+import java.io.Serializable;
 
 
 /**
@@ -9,7 +10,7 @@ import java.util.Observable;
  * The Oracle docs for the Observable class were used during implementation.
  * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
-public class ObservableHelper extends Observable {
+public class ObservableHelper extends Observable implements Serializable {
     public ObservableHelper() {
     }
 

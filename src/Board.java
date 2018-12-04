@@ -1,7 +1,8 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Board implements Drawable {
+public class Board implements Drawable, Serializable {
     private Lane toDo;
     private Lane inProgress;
     private Lane completed;
@@ -64,9 +65,20 @@ public class Board implements Drawable {
 
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, width, height);
+
+	//draw Lanes
         toDo.draw(g);
         inProgress.draw(g);
         completed.draw(g);
-
+	//draw Panels
+	for(Panel p : toDo.getPanels()) {
+	    p.draw(g);
+	}
+	for(Panel p : inProgress.getPanels()) {
+	    p.draw(g);
+	}
+	for(Panel p : completed.getPanels()) {
+	    p.draw(g);
+	}
     }
 }
