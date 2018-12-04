@@ -1,9 +1,10 @@
 import java.awt.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class Lane implements Drawable {
+public class Lane extends JComponent implements Drawable {
 
     /**
      * Used for keeping track of all panels used by all of the Lane instances.
@@ -130,9 +131,5 @@ public class Lane implements Drawable {
         int fontY = g.getFontMetrics(font).getAscent();
         g.setFont(font);
         g.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
-
-        for (Panel p : panels) {
-            p.draw(g);
-        }
     }
 }
