@@ -90,4 +90,9 @@ public class TaskModal extends JDialog {
         setVisible(true);
     }
 
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
 }
