@@ -93,8 +93,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         board.updatePanels();
     }
 
-    public JButton addButtonToLane(Lane lane, String title) {
-        //Adding border layout; Used for setting up button location
+    private JButton addButtonToLane(Lane lane, String title) {
+        //Adding border layout; Used for setting up button location.
         JPanel borderLayoutPanel = new JPanel();
         borderLayoutPanel.setLocation(lane.getxCoord(), lane.getyWidth());
         borderLayoutPanel.setBounds(lane.getxCoord(), lane.getyCoord(), lane.getxWidth(), lane.getMargin() / 2);
