@@ -117,6 +117,26 @@ public class Lane extends JComponent implements Drawable {
         return panels;
     }
 
+    public int getxCoord() {
+        return xCoord;
+    }
+
+    public int getyCoord() {
+        return yCoord;
+    }
+
+    public int getxWidth() {
+        return xWidth;
+    }
+
+    public int getyWidth() {
+        return yWidth;
+    }
+
+    public int getMargin() {
+        return margin;
+    }
+
     @Override
     public void draw(Graphics g) {
 

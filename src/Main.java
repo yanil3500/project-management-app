@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +30,21 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         LanePanels = new JLabel[3];
         Lanes = board.getLanes();
 
+        for (Lane lane : Lanes) {
+            if (lane.getLaneName().equals("ToDo")) {
+                JButton button = addButtonToLane(lane, "Add Task");
+                button.addActionListener(e -> {
+                    //Presents modal for adding a new task
+                    String taskName = new TaskModal((JFrame) SwingUtilities.getWindowAncestor(this), true).getTitle();
+                    System.out.println("taskName = " + taskName);
+                    //Create new task and adds it to ToDo Lane
+                    Panel newTask = Panel.createPanel(taskName);
+
+                    lane.addPanel(newTask);
+                });
+            }
+        }
+
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
@@ -55,12 +71,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 add(LanePanels[i]);
                 LanePanels[i].setLocation(WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
                 LanePanels[i].setSize(3 * WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
-
                 List<Panel> panels = Lanes[i].getPanels();
-                for (Panel p : panels) {
-                    add(p);
-                    p.addMouseListener(this);
-                    p.addMouseMotionListener(this);
+                for (Panel panel : panels) {
+                    add(panel);
+                    panel.addMouseListener(this);
+                    panel.addMouseMotionListener(this);
                 }
             }
 
@@ -76,15 +91,46 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 LanePanels[i].setLocation(WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
                 LanePanels[i].setSize(3 * WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
                 List<Panel> panels = Lanes[i].getPanels();
-                panels.stream().forEach(panel -> {
+                for (Panel panel : panels) {
                     add(panel);
                     panel.addMouseListener(this);
                     panel.addMouseMotionListener(this);
-                });
+                }
             }
 
         }
         board.updatePanels();
+    }
+
+    private JButton addButtonToLane(Lane lane, String title) {
+        //Adding border layout; Used for setting up button location.
+        JPanel borderLayoutPanel = new JPanel();
+        borderLayoutPanel.setLocation(lane.getxCoord(), lane.getyWidth());
+
+        //Setting the size of the panel equal to lane header.
+        borderLayoutPanel.setBounds(lane.getxCoord(), lane.getyCoord(), lane.getxWidth(), lane.getMargin() / 2);
+        borderLayoutPanel.setLayout(new BorderLayout());
+
+        //Makes the panel transparent
+        borderLayoutPanel.setOpaque(false);
+
+        //Adds panel to parent container
+        add(borderLayoutPanel);
+
+        JButton button = new JButton(title);
+        Font font = new Font("Arial", Font.PLAIN, 8);
+
+        //Gets the width and height of the button's text
+        int stringWidth = button.getFontMetrics(font).stringWidth(title);
+        int stringHeight = button.getFontMetrics(font).getAscent();
+
+        //Sets the button size according to its text size
+        button.setPreferredSize(new Dimension((int) (stringWidth * 2.5), stringHeight));
+
+        //Adds button to borderLayoutPanel; The button will hug the right wall of the container
+        borderLayoutPanel.add(button, BorderLayout.EAST);
+
+        return button;
     }
 
     public static void main(String[] args) {
@@ -125,21 +171,20 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 clickedPanel = p;
             }
         }
-	
-	Point mousePoint = e.getPoint();
 
-	if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
+        Point mousePoint = e.getPoint();
+        System.out.println("mouseClicked: " + clickedPanel.getTask().getTitle());
+        if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
 
-	    if(clickedPanel.getShowingMetadata()) {
-		clickedPanel.setShowingMetadata(false);
-		repaint();
-	    }
-	    else if (!clickedPanel.getShowingMetadata()) {
-		clickedPanel.setShowingMetadata(true);
-		repaint();
-	    }
-	}    
-	    
+            if (clickedPanel.getShowingMetadata()) {
+                clickedPanel.setShowingMetadata(false);
+                repaint();
+            } else if (!clickedPanel.getShowingMetadata()) {
+                clickedPanel.setShowingMetadata(true);
+                repaint();
+            }
+        }
+
     }
 
     @Override

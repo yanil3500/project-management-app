@@ -21,7 +21,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
 
     public Panel(Task task) {
         this.task = task;
-	showingMetadata = false;
+        showingMetadata = false;
     }
 
     public void updatePosition(int x, int y, int initWidth, int initHeight) {
@@ -46,18 +46,19 @@ public class Panel extends JLabel implements Drawable, Serializable {
     }
 
     public int getXPos() {
-	return xPos;
+        return xPos;
     }
 
     public int getYPos() {
-	return yPos;
+        return yPos;
     }
 
     public int getXBound() {
-	return width;
+        return width;
     }
+
     public int getYBound() {
-	return height;
+        return height;
     }
 
     public void setY(int y) {
@@ -67,15 +68,15 @@ public class Panel extends JLabel implements Drawable, Serializable {
     @Override
     public void draw(Graphics g) {
 
-	//drawing Panel
+        //drawing Panel
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(xPos, yPos, width, height);
 
-	//drawing Task information Strings
-	String title = task.getTitle();
+        //drawing Task information Strings
+        String title = task.getTitle();
         String author = task.getAuthor();
         String description = task.getDescription();
-	String deadline = task.getDeadline();
+        String deadline = task.getDeadline();
         g.setColor(Color.BLACK);
         Font font = new Font("TimesRoman", Font.PLAIN, 12);
         int rise = g.getFontMetrics(font).getAscent();
@@ -89,52 +90,52 @@ public class Panel extends JLabel implements Drawable, Serializable {
         if (description != null) {
             g.drawString(description, xPos + 5, yPos + 15 + 3 * rise);
         }
-	if (deadline != null) {
-	    g.drawString(description, xPos + 5, yPos + 20 + 4*rise);
-	}
+        if (deadline != null) {
+            g.drawString(description, xPos + 5, yPos + 20 + 4 * rise);
+        }
 
-	String moreInfo = "More Info";
-	Font infoFont = new Font("TimesRoman", Font.PLAIN, 8);
-	int infoRise = g.getFontMetrics(infoFont).getAscent();
-	int infoLength = g.getFontMetrics(infoFont).stringWidth(moreInfo);
-	g.setFont(infoFont);
-	g.drawString(moreInfo, xPos + width - infoLength - 3, yPos + height - infoRise - 2);
+        String moreInfo = "More Info";
+        Font infoFont = new Font("TimesRoman", Font.PLAIN, 8);
+        int infoRise = g.getFontMetrics(infoFont).getAscent();
+        int infoLength = g.getFontMetrics(infoFont).stringWidth(moreInfo);
+        g.setFont(infoFont);
+        g.drawString(moreInfo, xPos + width - infoLength - 3, yPos + height - infoRise - 2);
 
-	//displays metadata
-	if(showingMetadata) {
+        //displays metadata
+        if (showingMetadata) {
 
-	    String created = task.getMetadata().getDateCreated().toString();
-	    String modified = task.getMetadata().getLastModified().toString();
-	    int createdLength = g.getFontMetrics(infoFont).stringWidth(created);
-	    int modifiedLength = g.getFontMetrics(infoFont).stringWidth(modified);
-	    int metadataLength;
-	    if (createdLength > modifiedLength) {
-		metadataLength = createdLength;
-	    } else {
-	        metadataLength = modifiedLength;
-	    }
-	    
-	    g.setColor(Color.YELLOW);
-	    g.fillRect(xPos + width - 10, yPos + height - 10, metadataLength + 20, infoRise*7 + 10);
-	    g.setColor(Color.BLACK);
-	    g.drawString("Task Created:", xPos + width + 5, yPos + height);
-	    g.drawString(created, xPos + width + 5, yPos + height + 2*infoRise);
-	    g.drawString("Last Modified:", xPos + width + 5, yPos + height + 4*infoRise);
-	    g.drawString(modified, xPos + width + 5, yPos + height + infoRise*6);
-	}
+            String created = task.getMetadata().getDateCreated().toString();
+            String modified = task.getMetadata().getLastModified().toString();
+            int createdLength = g.getFontMetrics(infoFont).stringWidth(created);
+            int modifiedLength = g.getFontMetrics(infoFont).stringWidth(modified);
+            int metadataLength;
+            if (createdLength > modifiedLength) {
+                metadataLength = createdLength;
+            } else {
+                metadataLength = modifiedLength;
+            }
+
+            g.setColor(Color.YELLOW);
+            g.fillRect(xPos + width - 10, yPos + height - 10, metadataLength + 20, infoRise * 7 + 10);
+            g.setColor(Color.BLACK);
+            g.drawString("Task Created:", xPos + width + 5, yPos + height);
+            g.drawString(created, xPos + width + 5, yPos + height + 2 * infoRise);
+            g.drawString("Last Modified:", xPos + width + 5, yPos + height + 4 * infoRise);
+            g.drawString(modified, xPos + width + 5, yPos + height + infoRise * 6);
+        }
     }
 
 
     //Method to set whether or not to display metadata:
 
     public void setShowingMetadata(boolean showing) {
-	showingMetadata = showing;
+        showingMetadata = showing;
     }
 
     public boolean getShowingMetadata() {
-	return showingMetadata;
+        return showingMetadata;
     }
-    
+
     /**
      * NOTE: the equals method was generated by the IntelliJ IDE.
      * Compares this panel to the specified object. The result is true if and only if
@@ -165,11 +166,12 @@ public class Panel extends JLabel implements Drawable, Serializable {
 
     /**
      * Creates a panel instance with given task.
+     *
      * @param taskTitle
      * @return Panel.
      */
-    public static Panel createPanel(String taskTitle){
-        if (taskTitle == null || !taskTitle.equals("")) {
+    public static Panel createPanel(String taskTitle) {
+        if (taskTitle == null || taskTitle.equals("")) {
             return null;
         }
 

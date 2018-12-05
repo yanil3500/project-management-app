@@ -40,7 +40,7 @@ public class ProgramStateManager implements Observer {
     /**
      * Used to control when debugging output is print to stdout
      */
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     /**
      * The default constructor is being set to private so that no other ProgramStateManager instances can be created.
