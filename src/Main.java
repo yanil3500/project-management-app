@@ -29,6 +29,13 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         LanePanels = new JLabel[3];
         Lanes = board.getLanes();
 
+        for (Lane lane : Lanes) {
+            if (lane.getLaneName().equals("ToDo")) {
+                JButton button = addButtonToLane(lane, "Add Task");
+                button.addActionListener(e -> System.out.println("Button clicked! " + e));
+            }
+        }
+
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
@@ -55,7 +62,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 add(LanePanels[i]);
                 LanePanels[i].setLocation(WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
                 LanePanels[i].setSize(3 * WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
-
                 List<Panel> panels = Lanes[i].getPanels();
                 for (Panel p : panels) {
                     add(p);
@@ -85,6 +91,24 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         }
         board.updatePanels();
+    }
+
+    public JButton addButtonToLane(Lane lane, String title) {
+        //Adding border layout; Used for setting up button location
+        JPanel borderLayoutPanel = new JPanel();
+        borderLayoutPanel.setLocation(lane.getxCoord(), lane.getyWidth());
+        borderLayoutPanel.setBounds(lane.getxCoord(), lane.getyCoord(), lane.getxWidth(), lane.getMargin() / 2);
+        borderLayoutPanel.setLayout(new BorderLayout());
+        borderLayoutPanel.setOpaque(false);
+        add(borderLayoutPanel);
+
+        JButton button = new JButton(title);
+        Font font = new Font("Arial", Font.PLAIN, 8);
+        int stringWidth = button.getFontMetrics(font).stringWidth(title);
+        int stringHeight = button.getFontMetrics(font).getAscent();
+        button.setPreferredSize(new Dimension((int)(stringWidth * 2.5), stringHeight));
+        borderLayoutPanel.add(button, BorderLayout.EAST);
+        return button;
     }
 
     public static void main(String[] args) {
@@ -125,21 +149,20 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 clickedPanel = p;
             }
         }
-	
-	Point mousePoint = e.getPoint();
 
-	if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
+        Point mousePoint = e.getPoint();
 
-	    if(clickedPanel.getShowingMetadata()) {
-		clickedPanel.setShowingMetadata(false);
-		repaint();
-	    }
-	    else if (!clickedPanel.getShowingMetadata()) {
-		clickedPanel.setShowingMetadata(true);
-		repaint();
-	    }
-	}    
-	    
+        if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
+
+            if (clickedPanel.getShowingMetadata()) {
+                clickedPanel.setShowingMetadata(false);
+                repaint();
+            } else if (!clickedPanel.getShowingMetadata()) {
+                clickedPanel.setShowingMetadata(true);
+                repaint();
+            }
+        }
+
     }
 
     @Override
