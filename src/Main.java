@@ -20,6 +20,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     int clickedPanelIndex;
     int diffX;
     int diffY;
+    boolean showingMetadata = false;
 
     public Main() {
         board = new Board(WIDTH, HEIGHT);
@@ -27,6 +28,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         this.setLayout(null);
         LanePanels = new JLabel[3];
         Lanes = board.getLanes();
+
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
@@ -121,9 +123,23 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         for (Panel p : startLane.getPanels()) {
             if (e.getSource() == p) {
                 clickedPanel = p;
-                System.out.println("clicked " + clickedPanel);
             }
         }
+	
+	Point mousePoint = e.getPoint();
+
+	if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
+
+	    if(clickedPanel.getShowingMetadata()) {
+		clickedPanel.setShowingMetadata(false);
+		repaint();
+	    }
+	    else if (!clickedPanel.getShowingMetadata()) {
+		clickedPanel.setShowingMetadata(true);
+		repaint();
+	    }
+	}    
+	    
     }
 
     @Override
