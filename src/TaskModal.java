@@ -69,7 +69,7 @@ public class TaskModal extends JDialog {
 
 
         okButton.addActionListener(l -> {
-            if (!textField.getText().equals(EXAMPLE_TEXT) || !textField.getText().equals("")) {
+            if (textField.getText() != null || !textField.getText().equals(EXAMPLE_TEXT) || !textField.getText().equals("")) {
                 //Gets the title of the task from text field.
                 title = textField.getText();
                 // Dismisses the modal
