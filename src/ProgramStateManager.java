@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.stream.Collectors;
 
 
 /**
@@ -125,7 +126,9 @@ public class ProgramStateManager implements Observer {
         if (debug) {
             System.out.println("The board has changed! Time to save its state!");
         }
-        List<Object> panels = new ArrayList<>(Lane.getAllPanels());
+
+        //Creating new Panel based instances will, effectively, remove any mouse listener before serialization.
+        List<Object> panels = Lane.getAllPanels().stream().map(panel -> new Panel(panel)).collect(Collectors.toList());
         save(panels);
     }
 

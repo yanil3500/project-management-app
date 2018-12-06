@@ -24,6 +24,17 @@ public class Panel extends JLabel implements Drawable, Serializable {
         showingMetadata = false;
     }
 
+    //Copy constructor
+    public Panel(Panel panel) {
+        this.task = panel.task;
+        this.laneName = panel.laneName;
+        this.xPos = panel.xPos;
+        this.yPos = panel.yPos;
+        this.width = panel.width;
+        this.height = panel.height;
+        this.showingMetadata = panel.showingMetadata;
+    }
+
     public void updatePosition(int x, int y, int initWidth, int initHeight) {
         xPos = x;
         yPos = y;
@@ -67,7 +78,6 @@ public class Panel extends JLabel implements Drawable, Serializable {
 
     @Override
     public void draw(Graphics g) {
-
         //drawing Panel
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(xPos, yPos, width, height);
@@ -103,7 +113,6 @@ public class Panel extends JLabel implements Drawable, Serializable {
 
         //displays metadata
         if (showingMetadata) {
-
             String created = task.getMetadata().getDateCreated().toString();
             String modified = task.getMetadata().getLastModified().toString();
             int createdLength = g.getFontMetrics(infoFont).stringWidth(created);
@@ -114,7 +123,6 @@ public class Panel extends JLabel implements Drawable, Serializable {
             } else {
                 metadataLength = modifiedLength;
             }
-
             g.setColor(Color.YELLOW);
             g.fillRect(xPos + width - 10, yPos + height - 10, metadataLength + 20, infoRise * 7 + 10);
             g.setColor(Color.BLACK);

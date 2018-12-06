@@ -1,7 +1,7 @@
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 
 public class Lane extends JComponent implements Drawable {
@@ -10,7 +10,7 @@ public class Lane extends JComponent implements Drawable {
      * Used for keeping track of all panels used by all of the Lane instances.
      * This will be used for persisting all of those panels to disk.
      */
-    private static HashSet<Panel> allPanels = new HashSet<>();
+    private static LinkedHashSet<Panel> allPanels = new LinkedHashSet<>();
 
     private ArrayList<Panel> panels;
     private int boardWidth;
@@ -49,7 +49,7 @@ public class Lane extends JComponent implements Drawable {
      *
      * @return HashSet
      */
-    public static HashSet<Panel> getAllPanels() {
+    public static LinkedHashSet<Panel> getAllPanels() {
         return allPanels;
     }
 
