@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     int clickedPanelIndex;
     int diffX;
     int diffY;
-    boolean showingMetadata = false;
+
 
     public Main() {
         board = new Board(WIDTH, HEIGHT);
@@ -29,21 +28,23 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         this.setLayout(null);
         LanePanels = new JLabel[3];
         Lanes = board.getLanes();
+        Lane toDoLane = board.getLaneMappings().get("ToDo");
 
-        for (Lane lane : Lanes) {
-            if (lane.getLaneName().equals("ToDo")) {
-                JButton button = addButtonToLane(lane, "Add Task");
-                button.addActionListener(e -> {
-                    //Presents modal for adding a new task
-                    String taskName = new TaskModal((JFrame) SwingUtilities.getWindowAncestor(this), true).getTitle();
-                    System.out.println("taskName = " + taskName);
-                    //Create new task and adds it to ToDo Lane
-                    Panel newTask = Panel.createPanel(taskName);
-
-                    lane.addPanel(newTask);
-                });
+        //Adding 'Add Task' button to To Do Lane
+        JButton button = addButtonToLane(toDoLane, "Add Task");
+        button.addActionListener(e -> {
+            //Presents modal for adding a new task
+            String taskName = new TaskModal((JFrame) SwingUtilities.getWindowAncestor(this), true).getTitle();
+            //Create new task and adds it to To Do Lane
+            if (taskName != null) {
+                Panel newTask = Panel.createPanel(taskName);
+                toDoLane.addPanel(newTask);
+                add(newTask);
+                newTask.addMouseListener(this);
+                newTask.addMouseMotionListener(this);
+                repaint();
             }
-        }
+        });
 
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
@@ -173,9 +174,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
         Point mousePoint = e.getPoint();
-        System.out.println("mouseClicked: " + clickedPanel.getTask().getTitle());
         if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
-
             if (clickedPanel.getShowingMetadata()) {
                 clickedPanel.setShowingMetadata(false);
                 repaint();
@@ -265,6 +264,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
     }
+
+
 }
