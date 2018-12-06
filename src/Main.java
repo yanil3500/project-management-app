@@ -21,8 +21,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     int diffX;
     int diffY;
 
-
-    public Main() {
+    private Main() {
         board = new Board(WIDTH, HEIGHT);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(null);
@@ -42,7 +41,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 add(newTask);
                 newTask.addMouseListener(this);
                 newTask.addMouseMotionListener(this);
-                repaint();
             }
         });
 
@@ -265,6 +263,5 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mouseMoved(MouseEvent e) {
     }
-
 
 }
