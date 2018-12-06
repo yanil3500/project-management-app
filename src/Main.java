@@ -10,9 +10,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     public static int WIDTH = 1024;
     public static int HEIGHT = 768;
     Board board;
-    JLabel[] LanePanels;
+    JLabel[] betweenLanes;
     Lane[] Lanes;
+    //The starting lane of a panel being dragged
     Lane startLane;
+    //The ending lane of a panel being dragged
     Lane endLane;
     //Keeps track of selected or dragged panel
     Panel clickedPanel;
@@ -25,7 +27,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         board = new Board(WIDTH, HEIGHT);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(null);
-        LanePanels = new JLabel[3];
         Lanes = board.getLanes();
         Lane toDoLane = board.getLaneMappings().get("ToDo");
 
@@ -41,9 +42,22 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 add(newTask);
                 newTask.addMouseListener(this);
                 newTask.addMouseMotionListener(this);
+		board.updatePanels();
             }
         });
 
+	//adding mouse listeners to area between lanes
+	betweenLanes = new JLabel[2];
+	for (int i = 0; i < 2; i++) {
+	    betweenLanes[i] = new JLabel();
+	    betweenLanes[i].setLocation(4* WIDTH/13 + i*4*WIDTH/13, WIDTH/13);
+	    betweenLanes[i].setSize(WIDTH/13, HEIGHT - (2*WIDTH/13));
+	    this.add(betweenLanes[i]);
+	    betweenLanes[i].addMouseListener(this);
+	    betweenLanes[i].addMouseMotionListener(this);
+	}
+
+	//updating board with any existing tasks
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
@@ -66,10 +80,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             Lanes[2].addPanel(p6);
 
             for (int i = 0; i < 3; i++) {
-                LanePanels[i] = new JLabel();
-                add(LanePanels[i]);
-                LanePanels[i].setLocation(WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
-                LanePanels[i].setSize(3 * WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
                 List<Panel> panels = Lanes[i].getPanels();
                 for (Panel panel : panels) {
                     add(panel);
@@ -77,6 +87,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                     panel.addMouseMotionListener(this);
                 }
             }
+	    
 
         } else {
             HashMap<String, Lane> lanes = board.getLaneMappings();
@@ -85,10 +96,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             //Adds each panel back to its respective lane object
             panelsFromDisk.stream().forEach(panel -> lanes.get(panel.getLaneName()).addPanel(panel));
             for (int i = 0; i < 3; i++) {
-                LanePanels[i] = new JLabel();
-                add(LanePanels[i]);
-                LanePanels[i].setLocation(WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
-                LanePanels[i].setSize(3 * WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
                 List<Panel> panels = Lanes[i].getPanels();
                 for (Panel panel : panels) {
                     add(panel);
@@ -206,19 +213,16 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         Point mousePoint = e.getLocationOnScreen();
         Lane foundLane = null;
-
+	int i = 0;
         //checks which lane mouse press occurred in and assigns it to startLane
-        for (int i = 0; i < 3; i++) {
-            JLabel lane = LanePanels[i];
-            double yBound = lane.getBounds().getY();
-            double xBound = lane.getBounds().getX();
-            double height = lane.getBounds().getHeight();
-            double width = lane.getBounds().getWidth();
 
-            if (yBound < mousePoint.getY() && (yBound + height) > mousePoint.getY() && xBound < mousePoint.getX() && (xBound + width) > mousePoint.getX()) {
-                foundLane = Lanes[i];
-            }
-        }
+	if (mousePoint.getX() < betweenLanes[0].getBounds().getX()) {
+	    foundLane = Lanes[0];
+	} else if (mousePoint.getX() < betweenLanes[1].getBounds().getX()) {
+	    foundLane = Lanes[1];
+	} else if (mousePoint.getX() > betweenLanes[1].getBounds().getX()) {
+	    foundLane = Lanes[2];
+	}
         return foundLane;
     }
 
@@ -232,12 +236,29 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        endLane = laneFinder(e);
+        //endLane = laneFinder(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
 
+	if (e.getSource() == betweenLanes[0]){
+	    if(e.getPoint().getX() < 40) {
+		endLane = Lanes[0];
+	    }
+	    if(e.getPoint().getX() > 40) {
+		endLane = Lanes[1];
+	    }
+	}
+	if (e.getSource() == betweenLanes[1]) {
+	    System.out.println(e.getPoint().getX() + " " + e.getPoint().getY());
+	    if(e.getPoint().getX() < 40) {
+		endLane = Lanes[1];
+	    }
+	    if(e.getPoint().getX() > 40) {
+		endLane = Lanes[2];
+	    }
+	}
     }
 
     @Override
