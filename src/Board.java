@@ -63,21 +63,11 @@ public class Board implements Drawable, Serializable {
     @Override
     public void draw(Graphics g) {
 
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, width, height);
-        //draw Lanes
+        //g.setColor(Color.LIGHT_GRAY);
+        //g.fillRect(0, 0, width, height);
+        /*draw Lanes
         toDo.draw(g);
         inProgress.draw(g);
-        completed.draw(g);
-        //draw Panels
-        for (Panel p : toDo.getPanels()) {
-            p.draw(g);
-        }
-        for (Panel p : inProgress.getPanels()) {
-            p.draw(g);
-        }
-        for (Panel p : completed.getPanels()) {
-            p.draw(g);
-        }
+        completed.draw(g);*/
     }
 }

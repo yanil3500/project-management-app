@@ -23,11 +23,23 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     int diffX;
     int diffY;
 
-    private Main() {
+    private Main(JFrame frame) {
         board = new Board(WIDTH, HEIGHT);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(null);
         Lanes = board.getLanes();
+
+	for (int i = 0; i < 3; i++) {
+	    Lanes[i].setLocation(WIDTH/13 + i*4*(WIDTH/13), WIDTH/13);
+	    Lanes[i].setPreferredSize(new Dimension(WIDTH/3, HEIGHT/3));
+	    Lanes[i].setVisible(true);
+	    JScrollPane scroll = new JScrollPane(Lanes[i]);
+	    scroll.setVisible(true);
+	    add(Lanes[i]);
+	    frame.add(scroll);
+	    Lanes[i].repaint();
+	}
+	
         Lane toDoLane = board.getLaneMappings().get("ToDo");
 
         //Adding 'Add Task' button to To Do Lane
@@ -143,7 +155,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Main mainInstance = new Main();
+        Main mainInstance = new Main(frame);
         frame.add(mainInstance);
         frame.pack();
         frame.setVisible(true);
@@ -179,7 +191,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
         Point mousePoint = e.getPoint();
-        if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
+        if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > (clickedPanel.getWidth() - clickedPanel.getWidth()/4) && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > (clickedPanel.getHeight() - clickedPanel.getHeight()/4)) {
             if (clickedPanel.getShowingMetadata()) {
                 clickedPanel.setShowingMetadata(false);
                 repaint();
@@ -251,7 +263,6 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 	    }
 	}
 	if (e.getSource() == betweenLanes[1]) {
-	    System.out.println(e.getPoint().getX() + " " + e.getPoint().getY());
 	    if(e.getPoint().getX() < 40) {
 		endLane = Lanes[1];
 	    }

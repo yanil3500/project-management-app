@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 
-public class Lane extends JComponent implements Drawable {
+public class Lane extends JPanel implements Scrollable {
 
     /**
      * Used for keeping track of all panels used by all of the Lane instances.
@@ -25,14 +25,15 @@ public class Lane extends JComponent implements Drawable {
     private ObservableHelper observable;
 
     public Lane(String laneName) {
+        setBackground(Color.WHITE);
         this.laneName = laneName;
-
         this.panels = new ArrayList<>();
         //Instantiates an ObservableHelper
         observable = new ObservableHelper();
         //Adds the ProgramStateManager as an observer to monitor any changes in this lane.
         observable.addObserver(ProgramStateManager.getInstance());
-
+	super.setVisible(true);
+	repaint();
     }
 
 
@@ -138,18 +139,50 @@ public class Lane extends JComponent implements Drawable {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public Dimension getPreferredScrollableViewportSize() {
+	return new Dimension(xWidth, yWidth);
+    }
 
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+	return 100;
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+	return 100;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+	return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+	return false;
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+
+	System.out.println("painted");
+	super.paintComponent(g);
         g.setColor(Color.WHITE);
-        g.fillRect(xCoord, yCoord, xWidth, yWidth);
+        g.fillRect(0, 0, xWidth, yWidth);
         g.setColor(Color.GRAY);
-        g.fillRect(xCoord, yCoord, xWidth, margin / 2);
+        g.fillRect(0, 0, xWidth, margin / 2);
         g.setColor(Color.BLACK);
 
         Font font = new Font("Arial", Font.BOLD, 20);
         int fontX = g.getFontMetrics(font).stringWidth(title);
         int fontY = g.getFontMetrics(font).getAscent();
         g.setFont(font);
-        g.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
+        g.drawString(title, (xWidth - fontX) / 2, (margin / 2 + fontY) / 2);
+
+	//drawing panels
+	for(Panel p : panels) {
+	    p.draw(g);
+	}
     }
 }
