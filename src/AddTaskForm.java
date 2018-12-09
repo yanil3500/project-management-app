@@ -1,9 +1,9 @@
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+
 
 /**
- * The <code>AddTaskForm</code> class is
+ * The <code>AddTaskForm</code>class is used for adding tasks to the board.
  */
 public class AddTaskForm extends JDialog {
 
@@ -40,13 +40,21 @@ public class AddTaskForm extends JDialog {
         taskTitleTextField.setText("(Ex: Implement the 'Add Task' feature.)");
 
         okButton.setText("OK");
-        okButton.addActionListener(evt -> okButtonActionPerformed(evt));
+        okButton.addActionListener(evt -> {
+            taskName = taskTitleTextField.getText();
+            if (taskName.equals("")) {
+                presentErrorMessage(taskTitleTextField, "The task must have a name.", "Required Field");
+                return;
+            }
+
+            dispose();
+        });
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(evt -> cancelButtonActionPerformed(evt));
+        cancelButton.addActionListener(evt -> dispose());
 
         //This Stackoverflow question was looked at: https://stackoverflow.com/questions/344969/making-a-jdialog-button-respond-to-the-enter-key
-        //Enables the 'Enter' key for use by the form.
+        //Makes "OK" button respond to the 'Enter' key.
         getRootPane().setDefaultButton(okButton);
 
 
@@ -86,25 +94,22 @@ public class AddTaskForm extends JDialog {
         setVisible(true);
     }
 
-    private void okButtonActionPerformed(ActionEvent evt) {
 
-
-        taskName = taskTitleTextField.getText();
-        if (taskName.equals("")) {
-            presentErrorMessage(taskTitleTextField, "The task must have a name.", "Required Field");
-        }
-
-        dispose();
-    }
-
+    /**
+     * Gets the title entered by the user.
+     * @return String.
+     */
     public String getTitle(){
         return taskName;
     }
 
-    private void cancelButtonActionPerformed(ActionEvent evt) {
-        dispose();
-    }
 
+    /**
+     * Presents an error message to the user.
+     * @param field
+     * @param message
+     * @param dialogTitle
+     */
     private void presentErrorMessage(JComponent field, String message, String dialogTitle){
         JOptionPane.showMessageDialog(this, message, dialogTitle, JOptionPane.ERROR_MESSAGE);
         field.requestFocus();
