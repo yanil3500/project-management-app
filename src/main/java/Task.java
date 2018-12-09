@@ -55,6 +55,11 @@ public class Task extends Observable implements Serializable {
     private Metadata metadata;
 
     /**
+     * The panel to which this task is attached.
+     */
+    private Panel panel;
+
+    /**
      * This is the default constructor. The only argument required to create a Task instance is its title.
      *
      * @param title
@@ -65,7 +70,16 @@ public class Task extends Observable implements Serializable {
         this.metadata = new Metadata();
         this.notes = new ArrayList<>();
         //Adds the ProgramStateManager as an observer to monitor any changes in this task.
-        this.addObserver(ProgramStateManager.getInstance());
+        observe(this);
+    }
+
+    /**
+     * Adds the ProgramStateManager as an observer to monitor any changes in the given task.
+     * @param task
+     */
+    public static void observe(Task task){
+        //Reinstates the ProgramStateManager as an observer.
+        task.addObserver(ProgramStateManager.getInstance());
     }
 
     /**
@@ -166,6 +180,22 @@ public class Task extends Observable implements Serializable {
         this.deadline = deadline;
         //Update the last modified date to indicate that the task has been changed
         updateMetadata();
+    }
+
+    /**
+     * Get the panel to which this task is attached.
+     * @return Panel.
+     */
+    public Panel getPanel() {
+        return panel;
+    }
+
+    /**
+     * Changes the panel to which the task is attached.
+     * @param panel
+     */
+    public void setPanel(Panel panel) {
+        this.panel = panel;
     }
 
     /**

@@ -7,6 +7,8 @@ import java.io.Serializable;
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
  */
+
+
 public class Panel extends JLabel implements Drawable, Serializable {
     private Task task;
     /**
@@ -21,6 +23,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
 
     public Panel(Task task) {
         this.task = task;
+        this.task.setPanel(this);
         showingMetadata = false;
     }
 
@@ -101,7 +104,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
             g.drawString(description, xPos + 5, yPos + 15 + 3 * rise);
         }
         if (deadline != null) {
-            g.drawString(description, xPos + 5, yPos + 20 + 4 * rise);
+            g.drawString(deadline, xPos + 5, yPos + 20 + 4 * rise);
         }
 
         String moreInfo = "More Info";
@@ -115,6 +118,8 @@ public class Panel extends JLabel implements Drawable, Serializable {
         if (showingMetadata) {
             String created = task.getMetadata().getDateCreated().toString();
             String modified = task.getMetadata().getLastModified().toString();
+            System.out.println("created = " + created);
+            System.out.println("modified = " + modified);
             int createdLength = g.getFontMetrics(infoFont).stringWidth(created);
             int modifiedLength = g.getFontMetrics(infoFont).stringWidth(modified);
             int metadataLength;

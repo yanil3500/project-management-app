@@ -66,6 +66,9 @@ public class Lane extends JComponent implements Drawable {
         //Gives it name to each panel.
         panel.setLaneName(this.laneName);
 
+        //Adds the task attached to the given panel to the set of all tasks.
+        Task.observe(panel.getTask());
+
         //Adds panel to list of panels belonging to this lane.
         panels.add(panel);
 
