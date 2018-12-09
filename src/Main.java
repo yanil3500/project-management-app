@@ -34,7 +34,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         JButton button = addButtonToLane(toDoLane, "Add Task");
         button.addActionListener(e -> {
             //Presents modal for adding a new task
-            String taskName = new TaskModal((JFrame) SwingUtilities.getWindowAncestor(this), true).getTitle();
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            String taskName = new AddTaskForm(parentFrame, true).getTitle();
             //Create new task and adds it to To Do Lane
             if (taskName != null) {
                 Panel newTask = Panel.createPanel(taskName);
