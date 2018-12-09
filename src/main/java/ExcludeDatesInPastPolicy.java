@@ -9,7 +9,7 @@ import java.time.*;
  * */
 
 /**
- * The <code>ExcludeDatesInPastPolicy</code> class used for limiting the range of dates available in the date picker.
+ * The <code>ExcludeDatesInPastPolicy</code> class is used for limiting the range of dates available in the date picker.
  * In this case, dates in the past will not be selectable from the date picker.
  */
 public class ExcludeDatesInPastPolicy implements DateVetoPolicy {
