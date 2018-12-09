@@ -127,8 +127,10 @@ public class ProgramStateManager implements Observer {
             System.out.println("The board has changed! Time to save its state!");
         }
 
-        //Creating new Panel based instances will, effectively, remove any mouse listener before serialization.
-        List<Object> panels = Lane.getAllPanels().stream().map(panel -> new Panel(panel)).collect(Collectors.toList());
+        //Creating new Panel instances will, effectively, remove any mouse listeners before serialization.
+        List<Object> panels = Lane.getAllPanels().stream()
+                .map(panel -> new Panel(panel))
+                .collect(Collectors.toList());
         save(panels);
     }
 

@@ -43,22 +43,22 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 add(newTask);
                 newTask.addMouseListener(this);
                 newTask.addMouseMotionListener(this);
-		board.updatePanels();
+                board.updatePanels();
             }
         });
 
-	//adding mouse listeners to area between lanes
-	betweenLanes = new JLabel[2];
-	for (int i = 0; i < 2; i++) {
-	    betweenLanes[i] = new JLabel();
-	    betweenLanes[i].setLocation(4* WIDTH/13 + i*4*WIDTH/13, WIDTH/13);
-	    betweenLanes[i].setSize(WIDTH/13, HEIGHT - (2*WIDTH/13));
-	    this.add(betweenLanes[i]);
-	    betweenLanes[i].addMouseListener(this);
-	    betweenLanes[i].addMouseMotionListener(this);
-	}
+        //adding mouse listeners to area between lanes
+        betweenLanes = new JLabel[2];
+        for (int i = 0; i < 2; i++) {
+            betweenLanes[i] = new JLabel();
+            betweenLanes[i].setLocation(4 * WIDTH / 13 + i * 4 * WIDTH / 13, WIDTH / 13);
+            betweenLanes[i].setSize(WIDTH / 13, HEIGHT - (2 * WIDTH / 13));
+            this.add(betweenLanes[i]);
+            betweenLanes[i].addMouseListener(this);
+            betweenLanes[i].addMouseMotionListener(this);
+        }
 
-	//updating board with any existing tasks
+        //updating board with any existing tasks
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
@@ -88,7 +88,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                     panel.addMouseMotionListener(this);
                 }
             }
-	    
+
 
         } else {
             HashMap<String, Lane> lanes = board.getLaneMappings();
@@ -170,6 +170,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -180,14 +181,15 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
         Point mousePoint = e.getPoint();
+
+        //Double click for viewing task.
         if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
-            if (clickedPanel.getShowingMetadata()) {
-                clickedPanel.setShowingMetadata(false);
-                repaint();
-            } else if (!clickedPanel.getShowingMetadata()) {
-                clickedPanel.setShowingMetadata(true);
+            if (e.getClickCount() == 2) {
+                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                ViewTaskForm vtf = new ViewTaskForm(parentFrame, true, clickedPanel.getTask());
                 repaint();
             }
+
         }
 
     }
@@ -214,16 +216,16 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         Point mousePoint = e.getLocationOnScreen();
         Lane foundLane = null;
-	int i = 0;
+        int i = 0;
         //checks which lane mouse press occurred in and assigns it to startLane
 
-	if (mousePoint.getX() < betweenLanes[0].getBounds().getX()) {
-	    foundLane = Lanes[0];
-	} else if (mousePoint.getX() < betweenLanes[1].getBounds().getX()) {
-	    foundLane = Lanes[1];
-	} else if (mousePoint.getX() > betweenLanes[1].getBounds().getX()) {
-	    foundLane = Lanes[2];
-	}
+        if (mousePoint.getX() < betweenLanes[0].getBounds().getX()) {
+            foundLane = Lanes[0];
+        } else if (mousePoint.getX() < betweenLanes[1].getBounds().getX()) {
+            foundLane = Lanes[1];
+        } else if (mousePoint.getX() > betweenLanes[1].getBounds().getX()) {
+            foundLane = Lanes[2];
+        }
         return foundLane;
     }
 
@@ -243,23 +245,22 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mouseExited(MouseEvent e) {
 
-	if (e.getSource() == betweenLanes[0]){
-	    if(e.getPoint().getX() < 40) {
-		endLane = Lanes[0];
-	    }
-	    if(e.getPoint().getX() > 40) {
-		endLane = Lanes[1];
-	    }
-	}
-	if (e.getSource() == betweenLanes[1]) {
-	    System.out.println(e.getPoint().getX() + " " + e.getPoint().getY());
-	    if(e.getPoint().getX() < 40) {
-		endLane = Lanes[1];
-	    }
-	    if(e.getPoint().getX() > 40) {
-		endLane = Lanes[2];
-	    }
-	}
+        if (e.getSource() == betweenLanes[0]) {
+            if (e.getPoint().getX() < 40) {
+                endLane = Lanes[0];
+            }
+            if (e.getPoint().getX() > 40) {
+                endLane = Lanes[1];
+            }
+        }
+        if (e.getSource() == betweenLanes[1]) {
+            if (e.getPoint().getX() < 40) {
+                endLane = Lanes[1];
+            }
+            if (e.getPoint().getX() > 40) {
+                endLane = Lanes[2];
+            }
+        }
     }
 
     @Override
