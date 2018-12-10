@@ -112,6 +112,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }*/
         addMouseWheelListener(this);
         board.updatePanels();
+        SmsSender.sendSMS("sending");
     }
 
     private JButton addButtonToLane(Lane lane, String title) {
