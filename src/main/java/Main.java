@@ -34,8 +34,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             //Presents modal for adding a new task
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             String taskName = new AddTaskForm(parentFrame, true).getTitle();
-            //FOR TESTING PURPOSES
             String note = new AddNoteForm(parentFrame, true).getNote();
+            //FOR TESTING PURPOSES
             //Create new task and adds it to To Do Lane
             if (taskName != null) {
                 Panel newTask = Panel.createPanel(taskName);
@@ -185,20 +185,37 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             }
         }
 
+        //determines if the user has clicked the View Task 'button' (area)
         Point mousePoint = e.getPoint();
+        ButtonDimensions viewTaskButtonDimensions = clickedPanel.getViewTaskButtonDimensions();
+        int mouseXLocation = e.getXOnScreen();
+        int mouseYLocation = e.getYOnScreen();
+        int mouseYLocationAdjustment = mouseYLocation - (mouseYLocation - viewTaskButtonDimensions.buttonCeiling);
+        boolean isXInButtonBounds = mouseXLocation >= viewTaskButtonDimensions.buttonLeftWall && mouseXLocation < viewTaskButtonDimensions.buttonRightWall;
+        boolean isYInButtonBounds = mouseYLocationAdjustment >= viewTaskButtonDimensions.buttonCeiling;
+        boolean hasClickedViewTaskButton = isXInButtonBounds && isYInButtonBounds;
 
-        //Double click for viewing task.
-        if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
-            if (e.getClickCount() == 2) {
-                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                //FOR TESTING PURPOSES
-                ViewTaskForm vtf = new ViewTaskForm(parentFrame, true, clickedPanel.getTask());
-                ViewNotesForm vnf = new ViewNotesForm(parentFrame, true, clickedPanel.getTask());
-                repaint();
-            }
-
+        if (hasClickedViewTaskButton) {
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            System.out.println("The 'View Task' button has been clicked.");
+            ViewTaskForm vtf = new ViewTaskForm(parentFrame, true, clickedPanel.getTask());
+            repaint();
+            return;
         }
 
+        //determines if the user has clicked the View Notes 'button' (area)
+        ButtonDimensions viewNotesButtonDimensions = clickedPanel.getViewNotesButtonDimensions();
+        mouseYLocationAdjustment = mouseYLocation - (mouseYLocation - viewNotesButtonDimensions.buttonCeiling);
+        isXInButtonBounds = mouseXLocation >= viewNotesButtonDimensions.buttonLeftWall && mouseXLocation < viewNotesButtonDimensions.buttonRightWall;
+        isYInButtonBounds = mouseYLocationAdjustment >= viewNotesButtonDimensions.buttonCeiling;
+        boolean hasClickedViewNotesButton = isXInButtonBounds && isYInButtonBounds;
+        if (hasClickedViewNotesButton) {
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            System.out.println("The 'View Notes' button has been clicked.");
+            ViewNotesForm vnf = new ViewNotesForm(parentFrame, true, clickedPanel.getTask());
+            repaint();
+            return;
+        }
     }
 
     @Override

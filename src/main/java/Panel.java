@@ -8,6 +8,30 @@ import java.io.Serializable;
  * and saved onto disk.
  */
 
+class ButtonDimensions implements Serializable {
+    int buttonLeftWall;
+    int buttonRightWall;
+    int buttonCeiling;
+    int buttonFloor;
+
+
+    public ButtonDimensions(int x, int y, int width, int height) {
+        this.buttonLeftWall = x;
+        this.buttonRightWall = y;
+        this.buttonCeiling = width;
+        this.buttonFloor = height;
+    }
+
+    @Override
+    public String toString() {
+        return "ButtonDimensions{" +
+                "buttonLeftWall=" + buttonLeftWall +
+                ", buttonRightWall=" + buttonRightWall +
+                ", buttonCeiling=" + buttonCeiling +
+                ", buttonFloor=" + buttonFloor +
+                '}';
+    }
+}
 
 public class Panel extends JLabel implements Drawable, Serializable {
     private Task task;
@@ -19,12 +43,12 @@ public class Panel extends JLabel implements Drawable, Serializable {
     private int yPos;
     private int width;
     private int height;
-    private boolean showingMetadata;
+    private ButtonDimensions viewTaskButtonDimensions;
+    private ButtonDimensions viewNotesButtonDimensions;
 
     public Panel(Task task) {
         this.task = task;
         this.task.setPanel(this);
-        showingMetadata = false;
     }
 
     //Copy constructor
@@ -35,7 +59,6 @@ public class Panel extends JLabel implements Drawable, Serializable {
         this.yPos = panel.yPos;
         this.width = panel.width;
         this.height = panel.height;
-        this.showingMetadata = panel.showingMetadata;
     }
 
     public void updatePosition(int x, int y, int initWidth, int initHeight) {
@@ -107,46 +130,66 @@ public class Panel extends JLabel implements Drawable, Serializable {
             g.drawString(deadline, xPos + 5, yPos + 20 + 4 * rise);
         }
 
-        String moreInfo = "More Info";
-        Font infoFont = new Font("TimesRoman", Font.PLAIN, 8);
-        int infoRise = g.getFontMetrics(infoFont).getAscent();
-        int infoLength = g.getFontMetrics(infoFont).stringWidth(moreInfo);
-        g.setFont(infoFont);
-        g.drawString(moreInfo, xPos + width - infoLength - 3, yPos + height - infoRise - 2);
+        //button font
+        Font buttonFont = new Font("Arial", Font.BOLD, 8);
+        g.setFont(buttonFont);
 
-        //displays metadata
-        if (showingMetadata) {
-            String created = task.getMetadata().getDateCreated().toString();
-            String modified = task.getMetadata().getLastModified().toString();
-            System.out.println("created = " + created);
-            System.out.println("modified = " + modified);
-            int createdLength = g.getFontMetrics(infoFont).stringWidth(created);
-            int modifiedLength = g.getFontMetrics(infoFont).stringWidth(modified);
-            int metadataLength;
-            if (createdLength > modifiedLength) {
-                metadataLength = createdLength;
-            } else {
-                metadataLength = modifiedLength;
-            }
-            g.setColor(Color.YELLOW);
-            g.fillRect(xPos + width - 10, yPos + height - 10, metadataLength + 20, infoRise * 7 + 10);
-            g.setColor(Color.BLACK);
-            g.drawString("Task Created:", xPos + width + 5, yPos + height);
-            g.drawString(created, xPos + width + 5, yPos + height + 2 * infoRise);
-            g.drawString("Last Modified:", xPos + width + 5, yPos + height + 4 * infoRise);
-            g.drawString(modified, xPos + width + 5, yPos + height + infoRise * 6);
-        }
+        //gets 'View Notes' string dimensions
+        String viewNotes = "View/Edit Notes";
+        int viewNotesRise = g.getFontMetrics(buttonFont).getAscent();
+        int viewNotesWidth = g.getFontMetrics(buttonFont).stringWidth(viewNotes);
+        g.setFont(buttonFont);
+        int viewNotesX = xPos + 6;
+        int viewNotesY = yPos + height - viewNotesRise - 2;
+
+        //draw View Notes 'button' area
+        int viewNotesButtonX = viewNotesX - 2;
+        int viewNotesButtonY = viewNotesY - 10;
+        int viewNotesButtonHeight = viewNotesRise + 5;
+        int viewNotesButtonWidth = viewNotesWidth + 5;
+        g.setColor(Color.ORANGE);
+        g.fillRect(viewNotesButtonX, viewNotesButtonY, viewNotesButtonWidth, viewNotesButtonHeight);
+        viewNotesButtonDimensions = new ButtonDimensions(
+                viewNotesButtonX, //left wall of button
+                viewNotesButtonX + viewNotesButtonWidth, //right wall of button
+                viewNotesButtonY, //ceiling of button
+                viewNotesButtonY + viewNotesButtonHeight //floor of button
+        );
+
+        //gets 'View Task' string dimensions
+        String viewTask = "View/Edit Task";
+        int viewTaskRise = g.getFontMetrics(buttonFont).getAscent();
+        int viewTaskStringWidth = g.getFontMetrics(buttonFont).stringWidth(viewTask);
+        int viewTaskX = xPos + width - viewTaskStringWidth - 3 - 3;
+        int viewTaskY = yPos + height - viewTaskRise - 2;
+
+        //draw View Task 'button' area
+        int viewTaskButtonX = viewTaskX - 2;
+        int viewTaskButtonY = viewTaskY - 10;
+        int viewTaskButtonHeight = viewTaskRise + 5;
+        int viewTaskButtonWidth = viewTaskStringWidth + 5;
+        g.setColor(Color.PINK);
+        g.fillRect(viewTaskButtonX, viewTaskButtonY,  viewTaskButtonWidth, viewTaskButtonHeight);
+        viewTaskButtonDimensions = new ButtonDimensions(
+                viewTaskButtonX, //left wall of button
+                viewTaskButtonX + viewTaskButtonWidth, //right wall of button
+                viewTaskButtonY, //ceiling of button
+                viewTaskButtonY + viewTaskButtonHeight); //floor of button
+
+        g.setColor(Color.BLACK);
+
+        //draw 'View Task' string
+        g.drawString(viewTask, viewTaskX, viewTaskY);
+        //draw 'View Notes' string
+        g.drawString(viewNotes, viewNotesX, viewNotesY);
     }
 
-
-    //Method to set whether or not to display metadata:
-
-    public void setShowingMetadata(boolean showing) {
-        showingMetadata = showing;
+    public ButtonDimensions getViewTaskButtonDimensions() {
+        return viewTaskButtonDimensions;
     }
 
-    public boolean getShowingMetadata() {
-        return showingMetadata;
+    public ButtonDimensions getViewNotesButtonDimensions() {
+        return viewNotesButtonDimensions;
     }
 
     /**
