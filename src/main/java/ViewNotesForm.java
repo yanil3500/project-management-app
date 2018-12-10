@@ -84,10 +84,17 @@ public class ViewNotesForm extends JDialog {
                 addNoteCheckbox.setSelected(false);
                 int index = task.getNotes().size()- 1;
                 model.addElement(task.getNotes().get(index));
+                //Clear the input fields
+                editNoteTextArea.setText("");
+                editAuthorTextField.setText("");
                 return;
             }
             Note note = listOfNotes.getSelectedValue();
             int index = listOfNotes.getSelectedIndex();
+            if (note ==  null || index < 0) {
+                return;
+            }
+
             if(editNoteTextArea.getText().equals("") && editAuthorTextField.getText().equals("")){
                 notes.remove(index);
                 model.removeElement(note);
@@ -107,10 +114,16 @@ public class ViewNotesForm extends JDialog {
         deleteButton.addActionListener(evt -> {
             Note note = listOfNotes.getSelectedValue();
             int index = listOfNotes.getSelectedIndex();
+            if (note ==  null || index < 0) {
+                return;
+            }
             int choice = presentConfirmMessage(null, "Are you sure you want to delete this note?", "Delete Note?");
             if (choice == JOptionPane.YES_OPTION) {
                 task.deleteNote(index);
                 model.removeElement(note);
+                //Clear the input fields
+                editNoteTextArea.setText("");
+                editAuthorTextField.setText("");
             }
         });
 
