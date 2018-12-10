@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
+public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static int WIDTH = 1024;
     public static int HEIGHT = 768;
@@ -62,6 +62,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             this.add(betweenLanes[i]);
             betweenLanes[i].addMouseListener(this);
             betweenLanes[i].addMouseMotionListener(this);
+        }
+
+        //adding wheel listeners to lanes
+        for (Lane l : Lanes) {
+            l.addMouseWheelListener(this);
         }
 
         //updating board with any existing tasks
@@ -205,7 +210,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mousePressed(MouseEvent e) {
 
-        startLane = laneFinder(e);
+        startLane = laneFinder(e.getLocationOnScreen());
         List<Panel> panels = startLane.getPanels();
         int i = 0;
         for (Panel panel : panels) {
@@ -220,9 +225,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
     }
 
-    private Lane laneFinder(MouseEvent e) {
+    private Lane laneFinder(Point mousePoint) {
 
-        Point mousePoint = e.getLocationOnScreen();
         Lane foundLane = null;
         int i = 0;
         //checks which lane mouse press occurred in and assigns it to startLane
@@ -295,4 +299,26 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     public void mouseMoved(MouseEvent e) {
     }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
+        System.out.print("mouse scrolled");
+        int notches = e.getWheelRotation();
+        Lane l = laneFinder(e.getLocationOnScreen());
+        if (l != null) {
+            if (notches > 0) {
+                for (Panel p : l.getPanels()) {
+                    p.setY(p.getYPos() + 5);
+                    System.out.println("Scrolled up");
+                }
+            } else {
+                for (Panel p : l.getPanels()) {
+                    p.setY(p.getYPos() - 5);
+                    System.out.println("Scrolled down");
+                }
+
+            }
+            repaint();
+        }
+    }
 }
