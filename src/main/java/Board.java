@@ -69,15 +69,6 @@ public class Board implements Drawable, Serializable {
         toDo.draw(g);
         inProgress.draw(g);
         completed.draw(g);
-        //draw Panels
-        for (Panel p : toDo.getPanels()) {
-            p.draw(g);
-        }
-        for (Panel p : inProgress.getPanels()) {
-            p.draw(g);
-        }
-        for (Panel p : completed.getPanels()) {
-            p.draw(g);
-        }
+
     }
 }

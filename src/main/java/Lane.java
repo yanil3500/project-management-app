@@ -143,16 +143,23 @@ public class Lane extends JComponent implements Drawable {
     @Override
     public void draw(Graphics g) {
 
-        g.setColor(Color.WHITE);
-        g.fillRect(xCoord, yCoord, xWidth, yWidth);
-        g.setColor(Color.GRAY);
-        g.fillRect(xCoord, yCoord, xWidth, margin / 2);
-        g.setColor(Color.BLACK);
+        Graphics gr = g.create();
+        gr.setColor(Color.WHITE);
+        gr.fillRect(xCoord, yCoord, xWidth, yWidth);
+        gr.setColor(Color.GRAY);
+        gr.fillRect(xCoord, yCoord, xWidth, margin / 2);
+        gr.setColor(Color.BLACK);
 
         Font font = new Font("Arial", Font.BOLD, 20);
-        int fontX = g.getFontMetrics(font).stringWidth(title);
-        int fontY = g.getFontMetrics(font).getAscent();
-        g.setFont(font);
-        g.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
+        int fontX = gr.getFontMetrics(font).stringWidth(title);
+        int fontY = gr.getFontMetrics(font).getAscent();
+        gr.setFont(font);
+        gr.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
+
+        gr.setClip(xCoord, yCoord + margin/2, xWidth, yWidth - margin/2);
+        for (Panel p : panels) {
+            p.draw(gr);
+        }
+        gr.dispose();
     }
 }

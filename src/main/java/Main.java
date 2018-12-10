@@ -1,11 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
+public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static int WIDTH = 1024;
     public static int HEIGHT = 768;
@@ -65,38 +63,38 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
         //updating board with any existing tasks
-        if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
-            //hardcoding Tasks for now
-            Task task1 = new Task("Task1 Test");
-            Task task2 = new Task("Task2 Test");
-            Task task3 = new Task("Task3 Test");
-            Task task4 = new Task("Task4 Test");
-            Task task5 = new Task("Task5 Test");
-            Task task6 = new Task("Task6 Test");
-            Panel p1 = new Panel(task1);
-            Panel p2 = new Panel(task2);
-            Panel p3 = new Panel(task3);
-            Panel p4 = new Panel(task4);
-            Panel p5 = new Panel(task5);
-            Panel p6 = new Panel(task6);
-            Lanes[0].addPanel(p1);
-            Lanes[1].addPanel(p2);
-            Lanes[2].addPanel(p3);
-            Lanes[0].addPanel(p4);
-            Lanes[1].addPanel(p5);
-            Lanes[2].addPanel(p6);
+        //if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
+        //hardcoding Tasks for now
+        Task task1 = new Task("Task1 Test");
+        Task task2 = new Task("Task2 Test");
+        Task task3 = new Task("Task3 Test");
+        Task task4 = new Task("Task4 Test");
+        Task task5 = new Task("Task5 Test");
+        Task task6 = new Task("Task6 Test");
+        Panel p1 = new Panel(task1);
+        Panel p2 = new Panel(task2);
+        Panel p3 = new Panel(task3);
+        Panel p4 = new Panel(task4);
+        Panel p5 = new Panel(task5);
+        Panel p6 = new Panel(task6);
+        Lanes[0].addPanel(p1);
+        Lanes[1].addPanel(p2);
+        Lanes[2].addPanel(p3);
+        Lanes[0].addPanel(p4);
+        Lanes[1].addPanel(p5);
+        Lanes[2].addPanel(p6);
 
-            for (int i = 0; i < 3; i++) {
-                List<Panel> panels = Lanes[i].getPanels();
-                for (Panel panel : panels) {
-                    add(panel);
-                    panel.addMouseListener(this);
-                    panel.addMouseMotionListener(this);
-                }
+        for (int i = 0; i < 3; i++) {
+            List<Panel> panels = Lanes[i].getPanels();
+            for (Panel panel : panels) {
+                add(panel);
+                panel.addMouseListener(this);
+                panel.addMouseMotionListener(this);
             }
+        }
 
 
-        } else {
+        /*} else {
             HashMap<String, Lane> lanes = board.getLaneMappings();
             //Loads panels from disk
             ArrayList<Panel> panelsFromDisk = ProgramStateManager.getInstance().load();
@@ -111,7 +109,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 }
             }
 
-        }
+        }*/
+        addMouseWheelListener(this);
         board.updatePanels();
     }
 
@@ -205,7 +204,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mousePressed(MouseEvent e) {
 
-        startLane = laneFinder(e);
+        startLane = laneFinder(e.getLocationOnScreen());
         List<Panel> panels = startLane.getPanels();
         int i = 0;
         for (Panel panel : panels) {
@@ -220,9 +219,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
     }
 
-    private Lane laneFinder(MouseEvent e) {
+    private Lane laneFinder(Point mousePoint) {
 
-        Point mousePoint = e.getLocationOnScreen();
         Lane foundLane = null;
         int i = 0;
         //checks which lane mouse press occurred in and assigns it to startLane
@@ -295,4 +293,57 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     public void mouseMoved(MouseEvent e) {
     }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
+        int notches = e.getWheelRotation();
+        System.out.println(notches);
+        Lane l = laneFinder(e.getPoint());
+
+        if (l != null) {
+
+            if (PanelsInsideLane(l, notches)) {
+                if (notches < 0) {
+                    for (Panel p : l.getPanels()) {
+                        p.setY(p.getYPos() + 10);
+                        System.out.println("Scrolled up");
+                    }
+                } else if (notches > 0) {
+                    for (Panel p : l.getPanels()) {
+                        p.setY(p.getYPos() - 10);
+                        System.out.println("Scrolled down");
+                    }
+                }
+            }
+            repaint();
+        }
+    }
+
+    public boolean PanelsInsideLane(Lane l, int notches) {
+
+        if (notches > 0) {
+            int panelPos = 0;
+            if (l.getPanels() != null) {
+                for (Panel p : l.getPanels()) {
+                    panelPos = p.getYPos();
+                }
+            }
+            if (panelPos > (l.getyCoord() + l.getMargin())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (notches < 0) {
+            int panelPos = HEIGHT;
+            if (l.getPanels() != null) {
+                panelPos = (l.getPanels().get(0).getYPos()) + (l.getPanels().get(0).getYBound());
+            }
+            if (panelPos < (l.getyCoord() + l.getyWidth())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 }
