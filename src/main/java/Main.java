@@ -36,9 +36,15 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             //Presents modal for adding a new task
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             String taskName = new AddTaskForm(parentFrame, true).getTitle();
+            //FOR TESTING PURPOSES
+            String note = new AddNoteForm(parentFrame, true).getNote();
             //Create new task and adds it to To Do Lane
             if (taskName != null) {
                 Panel newTask = Panel.createPanel(taskName);
+                //FOR TESTING PURPOSES
+                if (note != null) {
+                    newTask.getTask().addNote(note);
+                }
                 toDoLane.addPanel(newTask);
                 add(newTask);
                 newTask.addMouseListener(this);
@@ -186,7 +192,9 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         if (mousePoint.getX() < (clickedPanel.getWidth() - 2) && mousePoint.getX() > 0 && mousePoint.getY() < (clickedPanel.getHeight() - 2) && mousePoint.getY() > 0) {
             if (e.getClickCount() == 2) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                //FOR TESTING PURPOSES
                 ViewTaskForm vtf = new ViewTaskForm(parentFrame, true, clickedPanel.getTask());
+                ViewNotesForm vnf = new ViewNotesForm(parentFrame, true, clickedPanel.getTask());
                 repaint();
             }
 
