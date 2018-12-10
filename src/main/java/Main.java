@@ -12,6 +12,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     Board board;
     JLabel[] betweenLanes;
     Lane[] Lanes;
+    JPanel[] LanePanels;
     //The starting lane of a panel being dragged
     Lane startLane;
     //The ending lane of a panel being dragged
@@ -64,13 +65,16 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             betweenLanes[i].addMouseMotionListener(this);
         }
 
-        //adding wheel listeners to lanes
-        for (Lane l : Lanes) {
-            l.addMouseWheelListener(this);
+        //adding wheel listeners to jpanels on lanes
+        LanePanels = new JPanel[3];
+        for (int i = 0; i < 3; i++) {
+            LanePanels[i] = new JPanel();
+            LanePanels[i].setBounds(Lanes[i].getxCoord(), Lanes[i].getyCoord(), Lanes[i].getxWidth(), Lanes[i].getyWidth());
+            LanePanels[i].addMouseWheelListener(this);
         }
 
         //updating board with any existing tasks
-        if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
+        //if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
             //hardcoding Tasks for now
             Task task1 = new Task("Task1 Test");
             Task task2 = new Task("Task2 Test");
@@ -101,7 +105,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             }
 
 
-        } else {
+        /*} else {
             HashMap<String, Lane> lanes = board.getLaneMappings();
             //Loads panels from disk
             ArrayList<Panel> panelsFromDisk = ProgramStateManager.getInstance().load();
@@ -116,7 +120,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 }
             }
 
-        }
+        }*/
         board.updatePanels();
     }
 
@@ -304,7 +308,13 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         System.out.print("mouse scrolled");
         int notches = e.getWheelRotation();
-        Lane l = laneFinder(e.getLocationOnScreen());
+        Lane l = null;
+        for (int i = 0; i < 3; i++) {
+            if (e.getSource() == LanePanels[i]) {
+                l = Lanes[i];
+            }
+        }
+
         if (l != null) {
             if (notches > 0) {
                 for (Panel p : l.getPanels()) {

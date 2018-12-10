@@ -69,6 +69,6 @@ public class Board implements Drawable, Serializable {
         toDo.draw(g);
         inProgress.draw(g);
         completed.draw(g);
-        
+
     }
 }

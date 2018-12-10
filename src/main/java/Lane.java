@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 
-public class Lane extends JComponent implements Drawable {
+public class Lane extends JPanel implements Drawable {
 
     /**
      * Used for keeping track of all panels used by all of the Lane instances.
