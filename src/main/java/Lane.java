@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 
-public class Lane extends JPanel implements Drawable {
+public class Lane extends JComponent implements Drawable {
 
     /**
      * Used for keeping track of all panels used by all of the Lane instances.
@@ -156,7 +156,7 @@ public class Lane extends JPanel implements Drawable {
         gr.setFont(font);
         gr.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
 
-        gr.setClip(xCoord, yCoord, xWidth, yWidth);
+        gr.setClip(xCoord, yCoord + margin/2, xWidth, yWidth - margin/2);
         for (Panel p : panels) {
             p.draw(gr);
         }
