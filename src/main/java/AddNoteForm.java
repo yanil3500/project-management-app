@@ -10,12 +10,11 @@ public class AddNoteForm extends JDialog {
     /**
      * Creates new form AddNote
      */
-    public AddNoteForm(JFrame parent, boolean modal, Task task) {
+    public AddNoteForm(JFrame parent, boolean modal) {
         super(parent, modal);
         //Sets dialog location
         setLocationRelativeTo(parent);
         initComponents();
-        this.task = task;
     }
 
     private void initComponents() {
@@ -34,10 +33,12 @@ public class AddNoteForm extends JDialog {
 
         okButton.setText("OK");
         okButton.addActionListener(evt -> {
-            String taskNoteText = taskNote.getText();
-            task.addNote(taskNoteText);
+            this.note = taskNote.getText();
             dispose();
         });
+        //This Stackoverflow question was looked at: https://stackoverflow.com/questions/344969/making-a-jdialog-button-respond-to-the-enter-key
+        //Makes "OK" button respond to the 'Enter' key.
+        getRootPane().setDefaultButton(okButton);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(evt -> dispose());
@@ -73,13 +74,17 @@ public class AddNoteForm extends JDialog {
         );
 
         pack();
+        setVisible(true);
     }
 
+    public String getNote() {
+        return note;
+    }
 
     private JButton cancelButton;
     private JButton okButton;
     private JTextField taskNote;
     private JLabel taskNoteLabel;
-    private Task task;
+    private String note;
 
 }

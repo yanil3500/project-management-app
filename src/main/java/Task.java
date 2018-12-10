@@ -248,7 +248,7 @@ public class Task extends Observable implements Serializable {
      * @param text
      */
     public void addNote(String author, String text) {
-        if (text == null || author == null || text.equals("") || author.equals("")) {
+        if (text == null || text.equals("")) {
             return;
         } else {
             Note note = new Note(author, text);
