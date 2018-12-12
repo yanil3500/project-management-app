@@ -4,10 +4,14 @@
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
@@ -48,7 +52,6 @@ public class ViewTaskForm extends JDialog {
         deadlineDatePickerLabel = new JLabel();
         descriptionTextFieldLabel = new JLabel();
         lastModifiedDateLabel = new JLabel();
-
         createDateLabel = new JLabel();
 
         //Text fields
@@ -128,14 +131,14 @@ public class ViewTaskForm extends JDialog {
         deadlineDatePicker.getComponentDateTextField().setToolTipText("Use the 'Select...' button beside this field to select a date.");
 
         lastModifiedDateLabel = new JLabel();
-        lastModifiedDateTextField = new JTextField("Sun Dec 09 03:51:45 EST 2018");
-        ;
+        lastModifiedDateTextField = new JTextField(task.getMetadata().getLastModified().toString());
+
         createDateLabel = new JLabel();
-        createDateTextField = new JTextField("Sun Dec 09 03:51:45 EST 2018");
-        ;
+        createDateTextField = new JTextField(task.getMetadata().getDateCreated().toString());
+
         phoneNumberListScrollPane = new JScrollPane();
         phoneNumberList = new JList<>();
-        phoneNumberList.setVisible(task.getPhoneNumbers().size() > 0 ? true : false);
+        phoneNumberList.setVisible(task.getPhoneNumbers().size() > 0);
 
         phoneNumberList.addListSelectionListener(listener -> {
             if(listener.getValueIsAdjusting()){
@@ -180,7 +183,7 @@ public class ViewTaskForm extends JDialog {
 
         addPhoneNumberButton = new JButton();
         deletePhoneNumberButton = new JButton();
-        //'Delete Phone #' button will only be visible if a number is selected fromm the list.
+        //'Delete Phone #' button will only be visible if a number is selected from the list.
         deletePhoneNumberButton.setVisible(false);
         deletePhoneNumberButton.setEnabled(false);
         deletePhoneNumberButton.addActionListener(evt -> {
@@ -198,6 +201,7 @@ public class ViewTaskForm extends JDialog {
                     phoneNumberList.setVisible(false);
                     phoneNumberListScrollPane.setVisible(false);
                     deletePhoneNumberButton.setVisible(false);
+                    deletePhoneNumberButton.setEnabled(false);
                     pack();
                     repaint();
                 }
@@ -242,6 +246,14 @@ public class ViewTaskForm extends JDialog {
             //The 'title' field is a required field. Covers case in which user might delete the title of an existing task.
             if (titleTextField.getText().equals("")) {
                 presentErrorMessage(titleTextField, "The 'title' field cannot be empty.", "Required Field");
+                return;
+            }
+
+            if (titleTextField.getText().length() > Task.TITLE_LENGTH_LIMIT) {
+                presentErrorMessage(
+                        titleTextField,
+                        "The task must be 140 characters or less in length.",
+                        "Task name too long.");
                 return;
             }
             this.task.editTitle(titleTextField.getText());
@@ -297,7 +309,7 @@ public class ViewTaskForm extends JDialog {
             if (evt.getStateChange() == ItemEvent.SELECTED) {
                 this.deadlineDatePicker.setEnabled(true);
                 this.deadlineDatePicker.requestFocus();
-            } else {;
+            } else {
                 this.deadlineDatePicker.setEnabled(false);
             }
         });
@@ -326,7 +338,7 @@ public class ViewTaskForm extends JDialog {
         createDateTextField.setText(task.getMetadata().getDateCreated().toString());
         createDateTextField.setEnabled(false);
 
-        phoneNumberListScrollPane.setVisible(task.getPhoneNumbers().size() > 0 ? true : false);
+        phoneNumberListScrollPane.setVisible(task.getPhoneNumbers().size() > 0);
 
         phoneNumberList.setModel(model);
         phoneNumberList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
