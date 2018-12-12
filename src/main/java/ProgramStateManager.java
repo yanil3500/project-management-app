@@ -39,11 +39,6 @@ public class ProgramStateManager implements Observer {
     private final File file = new File(FILE_NAME);
 
     /**
-     * Used to control when debugging output is print to stdout
-     */
-    private static boolean debug = false;
-
-    /**
      * The default constructor is being set to private so that no other ProgramStateManager instances can be created.
      */
     private ProgramStateManager() {
@@ -70,9 +65,7 @@ public class ProgramStateManager implements Observer {
         if (objects == null) {
             throw new NullPointerException("The objects list argument is null.");
         }
-        if (debug) {
-            System.out.println("Saving panels to disk...");
-        }
+
         objects.add(null);
         try (FileOutputStream fos = new FileOutputStream(FILE_NAME); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             for (Object object : objects) {
@@ -91,9 +84,6 @@ public class ProgramStateManager implements Observer {
      */
     public ArrayList<Panel> load() {
         ArrayList<Panel> fromFile = new ArrayList<>();
-        if (debug) {
-            System.out.println("Loading panels from disk...");
-        }
         try (FileInputStream fis = new FileInputStream(FILE_NAME); ObjectInputStream ois = new ObjectInputStream(fis)) {
             Object o = ois.readObject();
             while (o != null) {
@@ -124,10 +114,6 @@ public class ProgramStateManager implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        if (debug) {
-            System.out.println("The board has changed! Time to save its state!");
-        }
-
         //Creating new Panel instances will, effectively, remove any mouse listeners before serialization.
         List<Object> panels = Lane.getAllPanels().stream()
                 .map(panel -> new Panel(panel))
