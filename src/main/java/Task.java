@@ -1,5 +1,6 @@
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
 
 
 /**
@@ -17,6 +18,12 @@ import java.util.*;
  * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
 public class Task extends Observable implements Serializable {
+
+    /**
+     * The max length of a title's task; The task must be 140 characters or less in length.
+     * This limit is completely arbitrary.
+     */
+    final static int TITLE_LENGTH_LIMIT = 140;
 
     /**
      * The name of the task's creator. This field can be left blank.
@@ -65,6 +72,11 @@ public class Task extends Observable implements Serializable {
     private boolean reminded;
 
     /**
+     * Phone numbers to which reminder will be sent
+     */
+    private ArrayList<String> phoneNumbers;
+
+    /**
      * This is the default constructor. The only argument required to create a Task instance is its title.
      *
      * @param title
@@ -74,6 +86,7 @@ public class Task extends Observable implements Serializable {
         this.title = title;
         this.metadata = new Metadata();
         this.notes = new ArrayList<>();
+        this.phoneNumbers = new ArrayList<>();
         this.reminded = false;
         //Adds the ProgramStateManager as an observer to monitor any changes in this task.
         observe(this);
@@ -321,8 +334,47 @@ public class Task extends Observable implements Serializable {
         updateMetadata();
     }
 
+    /**
+     * Get the list of notes associated with the task.
+     * @return
+     */
     public ArrayList<Note> getNotes() {
         return notes;
+    }
+
+    /**
+     * Adds given phone number to the list of phone numbers.
+     * @param phoneNumber
+     */
+    public void addPhoneNumber(String phoneNumber){
+        if (phoneNumber == null) {
+            return;
+        }
+
+        phoneNumbers.add(phoneNumber);
+        updateMetadata();
+    }
+
+    /**
+     * Remove the phone number at the given index.
+     * @param index
+     */
+    public void deletePhoneNumber(int index){
+        if (index < 0 || index > phoneNumbers.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        //deletes phone number at given index
+        phoneNumbers.remove(index);
+        updateMetadata();
+
+    }
+
+    /**
+     * Gets the list of phone numbers associated with this task.
+     * @return
+     */
+    public ArrayList<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
     /**

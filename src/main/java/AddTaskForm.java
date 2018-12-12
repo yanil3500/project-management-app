@@ -9,8 +9,8 @@ public class AddTaskForm extends JDialog {
 
     private JButton cancelButton;
     private JButton okButton;
-    private JTextField taskTitleTextField;
-    private JLabel taskTitleTextFieldLabel;
+    private JTextField titleTextField;
+    private JLabel titleTextFieldLabel;
     private String taskName;
 
     /**
@@ -26,23 +26,33 @@ public class AddTaskForm extends JDialog {
     private void initComponents() {
 
         //Initialization code
-        taskTitleTextFieldLabel = new JLabel();
-        taskTitleTextField = new JTextField();
+        titleTextFieldLabel = new JLabel();
+        titleTextField = new JTextField();
         okButton = new JButton();
         cancelButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-//        setTitle("Add a task.");
+        setTitle("Add a task.");
 
-        taskTitleTextFieldLabel.setText("Name:");
+        titleTextFieldLabel.setText("Name:");
 
-        taskTitleTextField.setText("(Ex: Implement the 'Add Task' feature.)");
+        titleTextField.setText("(Ex: Implement the 'Add Task' feature.)");
 
         okButton.setText("OK");
         okButton.addActionListener(evt -> {
-            taskName = taskTitleTextField.getText();
+            taskName = titleTextField.getText();
             if (taskName.equals("")) {
-                presentErrorMessage(taskTitleTextField, "The task must have a name.", "Required Field");
+                presentErrorMessage(
+                        titleTextField,
+                        "The task must have a name.",
+                        "Required Field");
+                return;
+            }
+            if (taskName.length() > Task.TITLE_LENGTH_LIMIT) {
+                presentErrorMessage(
+                        titleTextField,
+                        "The task must be 140 characters or less in length.",
+                        "Task name too long.");
                 return;
             }
 
@@ -63,9 +73,9 @@ public class AddTaskForm extends JDialog {
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(taskTitleTextFieldLabel)
+                                .addComponent(titleTextFieldLabel)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(taskTitleTextField, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(titleTextField, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(50, 50, 50)
@@ -79,8 +89,8 @@ public class AddTaskForm extends JDialog {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(taskTitleTextFieldLabel)
-                                        .addComponent(taskTitleTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(titleTextFieldLabel)
+                                        .addComponent(titleTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(okButton)

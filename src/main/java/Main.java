@@ -3,12 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Date;
-import java.time.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -42,15 +42,9 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
             //Presents modal for adding a new task
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             String taskName = new AddTaskForm(parentFrame, true).getTitle();
-            String note = new AddNoteForm(parentFrame, true).getNote();
-            //FOR TESTING PURPOSES
             //Create new task and adds it to To Do Lane
             if (taskName != null) {
                 Panel newTask = Panel.createPanel(taskName);
-                //FOR TESTING PURPOSES
-                if (note != null) {
-                    newTask.getTask().addNote(note);
-                }
                 toDoLane.addPanel(newTask);
                 add(newTask);
                 newTask.addMouseListener(this);
@@ -410,21 +404,13 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                     panelPos = p.getYPos();
                 }
             }
-            if (panelPos > (l.getyCoord() + l.getMargin())) {
-                return true;
-            } else {
-                return false;
-            }
+            return panelPos > (l.getyCoord() + l.getMargin());
         } else if (notches < 0) {
             int panelPos = HEIGHT;
             if (l.getPanels() != null) {
                 panelPos = (l.getPanels().get(0).getYPos()) + (l.getPanels().get(0).getYBound());
             }
-            if (panelPos < (l.getyCoord() + l.getyWidth())) {
-                return true;
-            } else {
-                return false;
-            }
+            return panelPos < (l.getyCoord() + l.getyWidth());
         }
         return false;
     }
