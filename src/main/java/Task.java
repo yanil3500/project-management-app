@@ -345,6 +345,7 @@ public class Task extends Observable implements Serializable {
         }
 
         phoneNumbers.add(phoneNumber);
+        updateMetadata();
     }
 
     /**
@@ -357,7 +358,16 @@ public class Task extends Observable implements Serializable {
         }
         //deletes phone number at given index
         phoneNumbers.remove(index);
+        updateMetadata();
 
+    }
+
+    /**
+     * Gets the list of phone numbers associated with this task.
+     * @return
+     */
+    public ArrayList<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
     /**
