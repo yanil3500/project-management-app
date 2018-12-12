@@ -65,6 +65,11 @@ public class Task extends Observable implements Serializable {
     private boolean reminded;
 
     /**
+     * Phone numbers to which reminder will be sent
+     */
+    private ArrayList<String> phoneNumbers;
+
+    /**
      * This is the default constructor. The only argument required to create a Task instance is its title.
      *
      * @param title
@@ -74,6 +79,7 @@ public class Task extends Observable implements Serializable {
         this.title = title;
         this.metadata = new Metadata();
         this.notes = new ArrayList<>();
+        this.phoneNumbers = new ArrayList<>();
         this.reminded = false;
         //Adds the ProgramStateManager as an observer to monitor any changes in this task.
         observe(this);
@@ -321,8 +327,37 @@ public class Task extends Observable implements Serializable {
         updateMetadata();
     }
 
+    /**
+     * Get the list of notes associated with the task.
+     * @return
+     */
     public ArrayList<Note> getNotes() {
         return notes;
+    }
+
+    /**
+     * Adds given phone number to the list of phone numbers.
+     * @param phoneNumber
+     */
+    public void addPhoneNumber(String phoneNumber){
+        if (phoneNumber == null) {
+            return;
+        }
+
+        phoneNumbers.add(phoneNumber);
+    }
+
+    /**
+     * Remove the phone number at the given index.
+     * @param index
+     */
+    public void deletePhoneNumber(int index){
+        if (index < 0 || index > phoneNumbers.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        //deletes phone number at given index
+        phoneNumbers.remove(index);
+
     }
 
     /**
