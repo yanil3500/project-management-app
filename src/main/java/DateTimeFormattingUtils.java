@@ -5,6 +5,7 @@ import java.util.Locale;
 /**
  * The <code>DateTimeFormattingUtils</code> class is used for converting LocalDate object to String and vice-versa.
  * This is used when a task is presented via the ViewTaskForm.
+ * Used this Stackoverflow question when implementing this class.
  */
 public class DateTimeFormattingUtils {
 

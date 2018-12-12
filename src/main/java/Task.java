@@ -15,7 +15,7 @@ import java.util.Observable;
  * that their state has changed.
  * <p>
  * The Oracle docs for the Observable class were used during implementation.
- * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
+ * https://docs.oracle.com/javase/8/docs/api/java/util/Observable.html
  */
 public class Task extends Observable implements Serializable {
 

@@ -8,7 +8,7 @@ import java.util.Observable;
  * NOTE about Observable: This class extends the Observable class so that these objects can notify the ProgramStateManager
  * that their state has changed.
  * The Oracle docs for the Observable class were used during implementation.
- * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
+ * https://docs.oracle.com/javase/8/docs/api/java/util/Observable.html
  */
 public class ObservableHelper extends Observable implements Serializable {
     public ObservableHelper() {
