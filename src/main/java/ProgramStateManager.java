@@ -26,7 +26,7 @@ public class ProgramStateManager implements Observer {
     /**
      * Single instance of ProgramStateManager
      */
-    private static ProgramStateManager shared = new ProgramStateManager();
+    private final static ProgramStateManager shared = new ProgramStateManager();
 
     /**
      * The name for the file that will be used to save/load the program's state.
