@@ -5,8 +5,11 @@
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import javax.swing.*;
-import java.awt.event.ItemEvent;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 
 public class ViewTaskForm extends JDialog {
@@ -21,7 +24,18 @@ public class ViewTaskForm extends JDialog {
         //Sets task
         this.task = task;
         initComponents();
+        //Code for showing tool tip immediately
+        //Link:http://www.java2s.com/Tutorial/Java/0240__Swing/Makeatooltipsappearimmediately.htm
+        // Get current delay
+        int initialDelay = ToolTipManager.sharedInstance().getInitialDelay();
 
+        // Show tool tips immediately
+        ToolTipManager.sharedInstance().setInitialDelay(0);
+
+
+        // Show tool tips after a second
+        initialDelay = 1000;
+        ToolTipManager.sharedInstance().setInitialDelay(initialDelay);
 
     }
 
@@ -55,23 +69,141 @@ public class ViewTaskForm extends JDialog {
         editAssignedToCheckBox = new JCheckBox();
         editDescriptionCheckBox = new JCheckBox();
 
+        //Creates default list for phone numbers
+        DefaultListModel model = new DefaultListModel();
+
+        //Add phone numbers to model
+        for(String phoneNumber : task.getPhoneNumbers()){
+            model.addElement(phoneNumber);
+        }
+
         //Set the date picker's veto policy so that setting date in the past isn't allowed.
         DatePickerSettings settings = new DatePickerSettings();
         deadlineDatePicker = new DatePicker(settings);
         settings.setVetoPolicy(new ExcludeDatesInPastPolicy());
 
+        //Gets references for date picker components; Will be used for rearrange their placement on the form.
+        JButton calendarButton = deadlineDatePicker.getComponentToggleCalendarButton();
+        JTextField dateTextField = deadlineDatePicker.getComponentDateTextField();
+        //Will show text field after a date is selected.
+        dateTextField.setVisible(true);
+
+        //Set layout manager for datePicker
+        deadlineDatePicker.setLayout(new FlowLayout());
+
+        //Remove these components so that they could be re-arranged
+        deadlineDatePicker.remove(dateTextField);
+        deadlineDatePicker.remove(calendarButton);
+
+        deadlineDatePicker.add(calendarButton);
+        deadlineDatePicker.add(dateTextField);
         //Setting default date for DatePicker
-        LocalDate defaultDate = task.getDeadline() != null ? DateTimeFormattingUtils.toLocalDate(task.getDeadline()): LocalDate.now();
-        deadlineDatePicker.setDate(defaultDate);
+        String taskDeadline = task.getDeadline();
+        if(taskDeadline != null){
+            LocalDate date = DateTimeFormattingUtils.toLocalDate(taskDeadline);
+            deadlineDatePicker.setDate(date);
+        }
 
         //Rename DatePicker button
-        deadlineDatePicker.getComponentToggleCalendarButton().setText("Select...");
+        deadlineDatePicker.getComponentToggleCalendarButton().setText("Select Date");
+
+        //Will show the text field after a date is selected.
+        deadlineDatePicker.getComponentDateTextField().setVisible(false);
+
+        deadlineDatePicker.addDateChangeListener(evt -> {
+            System.out.println("Date getting picked.");
+            deadlineDatePicker.getComponentDateTextField().setVisible(true);
+            //Shows textField with selected date
+            pack();
+            deadlineDatePicker.repaint();
+            //Enable the 'Receive SMS Notifications' text field
+            phoneNumberFormattedField.setEnabled(true);
+            phoneNumberFormattedField.setBackground(Color.WHITE);
+        });
 
         //Make DatePicker textField not editable.
         deadlineDatePicker.getComponentDateTextField().setEditable(false);
 
         //Set tool tip for date picker
         deadlineDatePicker.getComponentDateTextField().setToolTipText("Use the 'Select...' button beside this field to select a date.");
+
+        lastModifiedDateLabel = new JLabel();
+        lastModifiedDateTextField = new JTextField("Sun Dec 09 03:51:45 EST 2018");
+        ;
+        createDateLabel = new JLabel();
+        createDateTextField = new JTextField("Sun Dec 09 03:51:45 EST 2018");
+        ;
+        phoneNumberListScrollPane = new JScrollPane();
+        phoneNumberList = new JList<>();
+        phoneNumberList.setVisible(task.getPhoneNumbers().size() > 0 ? true : false);
+
+        phoneNumberList.addListSelectionListener(listener -> {
+            if(listener.getValueIsAdjusting()){
+                //makes 'Delete Phone #' button visible and operable.
+                deletePhoneNumberButton.setVisible(true);
+                deletePhoneNumberButton.setEnabled(true);
+                pack();
+                repaint();
+            }
+        });
+        addNotificationLabel = new JLabel();
+        phoneNumberFormattedField = new JFormattedTextField();
+        phoneNumberFormattedField.setBackground(phoneNumberFormattedField.isVisible() ? Color.WHITE : Color.DARK_GRAY);
+
+        phoneNumberFormattedField.getDocument().addDocumentListener(new DocumentListener(){
+            //Regex is from Twilio
+            //Here is the link: https://www.twilio.com/docs/glossary/what-e164
+            String phoneNumberRegex = "^\\+?[1-9]\\d{1,14}$";
+            Pattern pattern = Pattern.compile(phoneNumberRegex);
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+            public void removeUpdate(DocumentEvent e) {
+                addPhoneNumberButton.setEnabled(false);
+            }
+            public void insertUpdate(DocumentEvent e) {
+                String phoneNumberFormattedFieldText = phoneNumberFormattedField.getText();
+                if(phoneNumberFormattedField.isEditValid()){
+                    //Enable the 'Add Phone Number' button only if input is valid
+                    if(pattern.matcher(phoneNumberFormattedFieldText).matches()){
+                        addPhoneNumberButton.setEnabled(true);
+                    }
+                } else {
+                    addPhoneNumberButton.setEnabled(false);
+                }
+            }
+        });
+
+        //Display placeholder text in phoneNumber text field.
+        TextPrompt textPrompt = new TextPrompt("Ex: ###########", phoneNumberFormattedField);
+        textPrompt.setForeground(Color.DARK_GRAY);
+
+        addPhoneNumberButton = new JButton();
+        deletePhoneNumberButton = new JButton();
+        //'Delete Phone #' button will only be visible if a number is selected fromm the list.
+        deletePhoneNumberButton.setVisible(false);
+        deletePhoneNumberButton.setEnabled(false);
+        deletePhoneNumberButton.addActionListener(evt -> {
+            String phoneNumber = phoneNumberList.getSelectedValue();
+            int index = phoneNumberList.getSelectedIndex();
+            if (phoneNumber ==  null || index < 0) {
+                System.out.print("No phone number selected.");
+                return;
+            }
+            int choice = presentConfirmMessage(null, "Are you sure you want to delete this phone #?", "Delete Phone #?");
+            if (choice == JOptionPane.YES_OPTION) {
+                task.deletePhoneNumber(index);
+                model.removeElement(phoneNumber);
+                if(this.task.getPhoneNumbers().isEmpty()){
+                    phoneNumberList.setVisible(false);
+                    phoneNumberListScrollPane.setVisible(false);
+                    deletePhoneNumberButton.setVisible(false);
+                    pack();
+                    repaint();
+                }
+            }
+
+        });
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("View/Edit Task");
@@ -194,7 +326,58 @@ public class ViewTaskForm extends JDialog {
         createDateTextField.setText(task.getMetadata().getDateCreated().toString());
         createDateTextField.setEnabled(false);
 
-        //NOTE: This layout code was generated by the Netbeans GUI Builder.
+        phoneNumberListScrollPane.setVisible(task.getPhoneNumbers().size() > 0 ? true : false);
+
+        phoneNumberList.setModel(model);
+        phoneNumberList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        phoneNumberListScrollPane.setViewportView(phoneNumberList);
+
+        addNotificationLabel.setText("Receive SMS notifications:");
+
+        phoneNumberFormattedField.setBackground(new java.awt.Color(153, 153, 153));
+        phoneNumberFormattedField.setToolTipText("Set a 'Deadline' date to enable SMS notifications.");
+        phoneNumberFormattedField.setDragEnabled(false);
+        phoneNumberFormattedField.setEnabled(false);
+
+        //Makes it so only digits are acknowledged.
+        //https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers
+        phoneNumberFormattedField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+
+                char c = evt.getKeyChar();
+                boolean isDigit = c >= '0' && c <= '9';
+                if(c >= '0' && c <= '9'){
+                }
+                if(phoneNumberFormattedField.getText().length() > 15){
+                    evt.consume();
+                }
+
+                if (!(isDigit || (c == KeyEvent.VK_BACK_SPACE)
+                        || (c == KeyEvent.VK_DELETE))) {
+                    evt.consume();
+                }
+            }
+        });
+
+        addPhoneNumberButton.setText("Add Phone #");
+        addPhoneNumberButton.setEnabled(false);
+        addPhoneNumberButton.addActionListener(evt -> {
+            if(phoneNumberFormattedField.isEditValid()){
+                String phoneNumberFormattedFieldText = "+" + phoneNumberFormattedField.getText();
+                task.addPhoneNumber(phoneNumberFormattedFieldText);
+                if(!phoneNumberListScrollPane.isVisible()){
+                    phoneNumberListScrollPane.setVisible(true);
+                    phoneNumberList.setVisible(true);
+                    pack();
+                    repaint();
+                }
+                if(model.getSize() < 5){
+                    model.addElement(phoneNumberFormattedFieldText);
+                }
+            }
+        });
+        deletePhoneNumberButton.setText("Delete Phone #");
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -226,15 +409,30 @@ public class ViewTaskForm extends JDialog {
                                                                 .addGap(0, 0, Short.MAX_VALUE))
                                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                                 .addGap(0, 0, Short.MAX_VALUE)
-                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                                        .addComponent(lastModifiedDateLabel)
+                                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                        .addComponent(lastModifiedDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                .addGroup(layout.createSequentialGroup()
+                                                                                        .addComponent(createDateLabel)
+                                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                        .addComponent(createDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                                .addComponent(lastModifiedDateLabel)
+                                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                                .addComponent(addNotificationLabel)
+                                                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                                                        .addComponent(phoneNumberFormattedField)
+                                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                                                        .addComponent(addPhoneNumberButton, GroupLayout.Alignment.TRAILING)
+                                                                                                        .addComponent(deletePhoneNumberButton, GroupLayout.Alignment.TRAILING))))
                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(lastModifiedDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(createDateLabel)
-                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(createDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))))
+                                                                                .addComponent(phoneNumberListScrollPane, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(8, 8, 8))))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(assignedToTextFieldLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -280,25 +478,40 @@ public class ViewTaskForm extends JDialog {
                                         .addComponent(deadlineDatePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(8, 8, 8)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(descriptionTextFieldLabel)
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(editDescriptionCheckBox)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                .addComponent(createDateLabel)
-                                                                .addComponent(createDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addGap(9, 9, 9)
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                .addComponent(lastModifiedDateLabel)
-                                                                .addComponent(lastModifiedDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addGap(98, 98, 98))
-                                                .addComponent(descriptionScrollPane)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(okButton)
-                                        .addComponent(cancelButton))
-                                .addContainerGap(20, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(descriptionTextFieldLabel)
+                                                .addContainerGap(234, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(editDescriptionCheckBox)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(createDateLabel)
+                                                                        .addComponent(createDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(9, 9, 9)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(lastModifiedDateLabel)
+                                                                        .addComponent(lastModifiedDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addComponent(addNotificationLabel)
+                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(phoneNumberFormattedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(addPhoneNumberButton)
+                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(deletePhoneNumberButton))
+                                                                        .addComponent(phoneNumberListScrollPane, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(2, 2, 2))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(descriptionScrollPane)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(okButton)
+                                                                        .addComponent(cancelButton))))
+                                                .addContainerGap(12, Short.MAX_VALUE))))
         );
 
         pack();
@@ -307,13 +520,34 @@ public class ViewTaskForm extends JDialog {
 
     private Task task;
 
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
 
     private void presentErrorMessage(JComponent field, String message, String dialogTitle){
         JOptionPane.showMessageDialog(this, message, dialogTitle, JOptionPane.ERROR_MESSAGE);
         field.requestFocus();
     }
 
+    private int presentConfirmMessage(JComponent field, String message, String dialogTitle) {
+        JFrame frame = new JFrame();
+        int choice = JOptionPane.showConfirmDialog(frame,
+                message,
+                dialogTitle,
+                JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            frame.dispose();
+        } else {
+            frame.dispose();
+        }
 
+        return choice;
+    }
+
+
+    private JLabel addNotificationLabel;
+    private JButton addPhoneNumberButton;
     private JTextField assignedToTextField;
     private JLabel assignedToTextFieldLabel;
     private JTextField authorTextField;
@@ -323,6 +557,7 @@ public class ViewTaskForm extends JDialog {
     private JTextField createDateTextField;
     private com.github.lgooddatepicker.components.DatePicker deadlineDatePicker;
     private JLabel deadlineDatePickerLabel;
+    private JButton deletePhoneNumberButton;
     private JScrollPane descriptionScrollPane;
     private JTextArea descriptionTextArea;
     private JLabel descriptionTextFieldLabel;
@@ -334,6 +569,9 @@ public class ViewTaskForm extends JDialog {
     private JLabel lastModifiedDateLabel;
     private JTextField lastModifiedDateTextField;
     private JButton okButton;
+    private JFormattedTextField phoneNumberFormattedField;
+    private JList<String> phoneNumberList;
+    private JScrollPane phoneNumberListScrollPane;
     private JTextField titleTextField;
     private JLabel titleTextFieldLabel;
 
