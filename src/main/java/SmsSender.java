@@ -1,4 +1,7 @@
-// Install the Java helper library from twilio.com/docs/libraries/java
+/*
+* This code was mostly taken from the Twilio API reference documentation:
+* https://www.twilio.com/docs/sms/quickstart/java
+ */
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -8,10 +11,12 @@ public class SmsSender {
     public static final String AUTH_TOKEN = "bb36e5b781e1c7921b3938a13eec87e4";
     public static final String TWILIO_NUMBER = "+16292069548";
 
-    public static void sendSMS(String text) {
+    public static void sendSMS(String text, String[] phoneNumbers) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        Message message = Message.creator(new PhoneNumber("+16154962253"), new PhoneNumber(TWILIO_NUMBER), text).create();
-        System.out.println(message.getSid());
+        for (String number : phoneNumbers) {
+            Message message = Message.creator(new PhoneNumber(number), new PhoneNumber(TWILIO_NUMBER), text).create();
+            System.out.println(message.getSid());
+        }
     }
 }
 
