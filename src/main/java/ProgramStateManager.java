@@ -31,12 +31,12 @@ public class ProgramStateManager implements Observer {
     /**
      * The name for the file that will be used to save/load the program's state.
      */
-    private String FILE_NAME = "program-state.txt";
+    private final String FILE_NAME = "program-state.txt";
 
     /**
      * A File object that will be used to check if the program's state has been saved previously.
      */
-    private File file = new File(FILE_NAME);
+    private final File file = new File(FILE_NAME);
 
     /**
      * Used to control when debugging output is print to stdout
