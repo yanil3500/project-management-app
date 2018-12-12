@@ -8,9 +8,13 @@ import java.util.Locale;
  */
 public class DateTimeFormattingUtils {
 
-    private static final String DATE_FORMAT = "MMMM d, yyyy";
+    private static final String DATE_PATTERN = "MMMM d, yyyy";
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
+
+    private DateTimeFormattingUtils(){
+
+    }
 
     public static LocalDate toLocalDate(String dateString) {
         if (dateString == null) {
