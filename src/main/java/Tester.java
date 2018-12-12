@@ -25,7 +25,7 @@ public class Tester {
     /**
      * Tests that Panel objects and their member variables are correctly being saved/loaded correctly to/from disk.
      */
-    public static void testPanelSavesAndLoadsToAndFromDisk() {
+    private static void testPanelSavesAndLoadsToAndFromDisk() {
 
         //Creates a dummy task for Panel.
         Task t1 = new Task("Work on cracking the coding interview.");
@@ -63,7 +63,7 @@ public class Tester {
     /**
      * Tests that Panel objects are saved to disk when moving through lanes.
      */
-    public static void testPanelsAreSavedWhenMovingThroughLanes() {
+    private static void testPanelsAreSavedWhenMovingThroughLanes() {
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         t1.setAuthor("Berner Herzog");
@@ -103,7 +103,7 @@ public class Tester {
     /**
      * Tests that the Panel are saved to disk when their associated task is changed.
      */
-    public static void testPanelsAreSavedWhenAssociatedTasksChanged() {
+    private static void testPanelsAreSavedWhenAssociatedTasksChanged() {
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         Task t2 = new Task("Apply for internships.");
@@ -133,13 +133,13 @@ public class Tester {
     }
 
     /**
-     * Checks that given objects are equal to one another.
+     * Checks that the given objects are equal to one another.
      *
      * @param o1
      * @param o2
      * @return
      */
-    public static boolean assertEquals(Object o1, Object o2) {
+    private static boolean assertEquals(Object o1, Object o2) {
         return o1.equals(o2);
     }
 }

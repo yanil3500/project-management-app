@@ -10,11 +10,10 @@ import java.awt.*;
  */
 public class NoteCellRenderer extends JPanel implements ListCellRenderer<Note> {
 
-
-    Font noteTextAreaFont;
-    Font noteAuthorFont;
-    JTextArea noteTextArea;
-    JTextField noteAuthorTextField;
+    private Font noteTextAreaFont;
+    private Font noteAuthorFont;
+    private JTextArea noteTextArea;
+    private JTextField noteAuthorTextField;
 
     public NoteCellRenderer() {
         setOpaque(true);
@@ -61,14 +60,5 @@ public class NoteCellRenderer extends JPanel implements ListCellRenderer<Note> {
 
         return this;
     }
-
-    public JTextArea getNoteTextArea() {
-        return noteTextArea;
-    }
-
-    public JTextField getNoteAuthorTextField() {
-        return noteAuthorTextField;
-    }
-
 
 }

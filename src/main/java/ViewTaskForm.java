@@ -18,8 +18,37 @@ import java.util.regex.Pattern;
 
 public class ViewTaskForm extends JDialog {
 
+    private JLabel addNotificationLabel;
+    private JLabel assignedToTextFieldLabel;
+    private JLabel authorTextFieldLabel;
+    private JLabel createDateLabel;
+    private JLabel deadlineDatePickerLabel;
+    private JLabel descriptionTextFieldLabel;
+    private JLabel lastModifiedDateLabel;
+    private JLabel titleTextFieldLabel;
+    private JTextField assignedToTextField;
+    private JTextField authorTextField;
+    private JTextField lastModifiedDateTextField;
+    private JTextField createDateTextField;
+    private JTextField titleTextField;
+    private JCheckBox editAssignedToCheckBox;
+    private JCheckBox editAuthorCheckBox;
+    private JCheckBox editDeadlineCheckBox;
+    private JCheckBox editDescriptionCheckBox;
+    private JCheckBox editTitleCheckBox;
+    private JButton deletePhoneNumberButton;
+    private JButton cancelButton;
+    private JButton addPhoneNumberButton;
+    private JButton okButton;
+    private JScrollPane descriptionScrollPane;
+    private JScrollPane phoneNumberListScrollPane;
+    private JList<String> phoneNumberList;
+    private JFormattedTextField phoneNumberFormattedField;
+    private JTextArea descriptionTextArea;
+    private com.github.lgooddatepicker.components.DatePicker deadlineDatePicker;
+
     /**
-     * Creates new form EditTaskForm
+     * Creates new form ViewTaskForm
      */
     public ViewTaskForm(JFrame parent, boolean modal, Task task) {
         super(parent, modal);
@@ -196,7 +225,7 @@ public class ViewTaskForm extends JDialog {
                 System.out.print("No phone number selected.");
                 return;
             }
-            int choice = presentConfirmMessage(null, "Are you sure you want to delete this phone #?", "Delete Phone #?");
+            int choice = presentConfirmMessage("Are you sure you want to delete this phone #?", "Delete Phone #?");
             if (choice == JOptionPane.YES_OPTION) {
                 task.deletePhoneNumber(index);
                 model.removeElement(phoneNumber);
@@ -548,7 +577,7 @@ public class ViewTaskForm extends JDialog {
         field.requestFocus();
     }
 
-    private int presentConfirmMessage(JComponent field, String message, String dialogTitle) {
+    private int presentConfirmMessage(String message, String dialogTitle) {
         JFrame frame = new JFrame();
         int choice = JOptionPane.showConfirmDialog(frame,
                 message,
@@ -564,34 +593,7 @@ public class ViewTaskForm extends JDialog {
     }
 
 
-    private JLabel addNotificationLabel;
-    private JButton addPhoneNumberButton;
-    private JTextField assignedToTextField;
-    private JLabel assignedToTextFieldLabel;
-    private JTextField authorTextField;
-    private JLabel authorTextFieldLabel;
-    private JButton cancelButton;
-    private JLabel createDateLabel;
-    private JTextField createDateTextField;
-    private com.github.lgooddatepicker.components.DatePicker deadlineDatePicker;
-    private JLabel deadlineDatePickerLabel;
-    private JButton deletePhoneNumberButton;
-    private JScrollPane descriptionScrollPane;
-    private JTextArea descriptionTextArea;
-    private JLabel descriptionTextFieldLabel;
-    private JCheckBox editAssignedToCheckBox;
-    private JCheckBox editAuthorCheckBox;
-    private JCheckBox editDeadlineCheckBox;
-    private JCheckBox editDescriptionCheckBox;
-    private JCheckBox editTitleCheckBox;
-    private JLabel lastModifiedDateLabel;
-    private JTextField lastModifiedDateTextField;
-    private JButton okButton;
-    private JFormattedTextField phoneNumberFormattedField;
-    private JList<String> phoneNumberList;
-    private JScrollPane phoneNumberListScrollPane;
-    private JTextField titleTextField;
-    private JLabel titleTextFieldLabel;
+
 
 
 }

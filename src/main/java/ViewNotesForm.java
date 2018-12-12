@@ -14,6 +14,24 @@ import java.util.ArrayList;
  */
 public class ViewNotesForm extends JDialog {
 
+    private Task task;
+    private ArrayList<Note> notes;
+    private boolean addNote;
+    private JPanel buttonPanel;
+    private JPanel editPanel;
+    private JButton cancelButton;
+    private JButton deleteButton;
+    private JButton saveButton;
+    private JLabel notesLabel;
+    private JLabel editAuthorLabel;
+    private JLabel editNoteLabel;
+    private JTextField editAuthorTextField;
+    private JTextArea editNoteTextArea;
+    private JScrollPane editNoteTextAreaScrollPane;
+    private JScrollPane listOfNotesScrollPane;
+    private JList<Note> listOfNotes;
+    private JCheckBox addNoteCheckbox;
+
     /**
      * Creates new form ViewNotesForm
      */
@@ -278,23 +296,5 @@ public class ViewNotesForm extends JDialog {
 
         return choice;
     }
-
-    private Task task;
-    private ArrayList<Note> notes;
-    private boolean addNote;
-    private JPanel buttonPanel;
-    private JButton cancelButton;
-    private JButton deleteButton;
-    private JLabel editAuthorLabel;
-    private JTextField editAuthorTextField;
-    private JLabel editNoteLabel;
-    private JTextArea editNoteTextArea;
-    private JPanel editPanel;
-    private JScrollPane editNoteTextAreaScrollPane;
-    private JList<Note> listOfNotes;
-    private JScrollPane listOfNotesScrollPane;
-    private JLabel notesLabel;
-    private JButton saveButton;
-    private JCheckBox addNoteCheckbox;
 
 }
