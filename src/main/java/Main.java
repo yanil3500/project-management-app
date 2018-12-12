@@ -1,7 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Date;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class Main extends JPanel implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -63,7 +71,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
         //updating board with any existing tasks
-        //if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
+        if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
         //hardcoding Tasks for now
         Task task1 = new Task("Task1 Test");
         Task task2 = new Task("Task2 Test");
@@ -94,7 +102,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
 
 
-        /*} else {
+        } else {
             HashMap<String, Lane> lanes = board.getLaneMappings();
             //Loads panels from disk
             ArrayList<Panel> panelsFromDisk = ProgramStateManager.getInstance().load();
@@ -109,9 +117,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 }
             }
 
-        }*/
+        }
         addMouseWheelListener(this);
         board.updatePanels();
+        Thread sendReminders = new Thread (new Runner());
+        sendReminders.start();
     }
 
     private JButton addButtonToLane(Lane lane, String title) {
@@ -160,6 +170,59 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         board.draw(g);
     }
 
+        class Runner implements Runnable {
+            Runner() {
+            }
+
+            @Override
+            public void run() {
+                while (true) {
+                    Date now = new Date();
+                    String deadline = null;
+                    Date deadlineDate = null;
+                    //reminder text to always be sent at 8 am
+                    int currentHour = java.time.LocalDateTime.now().getHour();
+                    if (currentHour == 8) {
+                        for (Lane l : Lanes) {
+                            for (Panel p : l.getPanels()) {
+                                Task t = p.getTask();
+                                //String[] phoneNumbers = t.getPhoneNumbers();
+                                //for now hard coding phone numbers
+                                String[] numbers = new String[1];
+                                numbers[0] = "+16154962253";
+                                //checks to see if reminder has already been sent
+                                if (t.getReminded() != true) {
+                                    deadline = t.getDeadline();
+                                    SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                                    //transform deadline to type Date
+                                    if (deadline != null) {
+                                        try {
+                                            deadlineDate = format.parse(deadline);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    if (deadlineDate != null) {
+                                        //transform current and deadline dates to type LocalDate
+                                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM dd kk:mm:ss zzz yyyy");
+                                        LocalDate today = LocalDate.parse(now.toString(), dtf);
+                                        LocalDate dead = LocalDate.parse(deadlineDate.toString(), dtf);
+                                        //obtain tomorrow's date
+                                        LocalDate tomorrow = today.plusDays(1);
+                                        //send SMS if deadline is tomorrow
+                                        if (dead.toString().equals(tomorrow.toString())) {
+                                            SmsSender.sendSMS("Don't forget! The deadline for your task, " + t.getTitle() + ", is tomorrow.", numbers);
+                                            t.setReminded(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -179,6 +242,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
     @Override
     public void mouseClicked(MouseEvent e) {
 
+        //finds panel that was clicked
         for (Panel p : startLane.getPanels()) {
             if (e.getSource() == p) {
                 clickedPanel = p;
@@ -236,11 +300,11 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
     }
 
+    //checks which lane a mouseEvent's Point falls within
     private Lane laneFinder(Point mousePoint) {
 
         Lane foundLane = null;
         int i = 0;
-        //checks which lane mouse press occurred in and assigns it to startLane
 
         if (mousePoint.getX() < betweenLanes[0].getBounds().getX()) {
             foundLane = Lanes[0];
@@ -262,10 +326,10 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //endLane = laneFinder(e);
     }
 
     @Override
+    //determines mouse movement
     public void mouseExited(MouseEvent e) {
 
         if (e.getSource() == betweenLanes[0]) {
@@ -317,8 +381,8 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         System.out.println(notches);
         Lane l = laneFinder(e.getPoint());
 
+        //scrolls up or down depending on direction of MouseWheelEvent
         if (l != null) {
-
             if (PanelsInsideLane(l, notches)) {
                 if (notches < 0) {
                     for (Panel p : l.getPanels()) {
@@ -336,6 +400,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
     }
 
+    //checks if the panels drawn on a lane are still within the proper bounds
     public boolean PanelsInsideLane(Lane l, int notches) {
 
         if (notches > 0) {

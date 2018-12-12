@@ -60,6 +60,11 @@ public class Task extends Observable implements Serializable {
     private Panel panel;
 
     /**
+     * Represents whether a reminder SMS has been sent.
+     */
+    private boolean reminded;
+
+    /**
      * This is the default constructor. The only argument required to create a Task instance is its title.
      *
      * @param title
@@ -69,6 +74,7 @@ public class Task extends Observable implements Serializable {
         this.title = title;
         this.metadata = new Metadata();
         this.notes = new ArrayList<>();
+        this.reminded = false;
         //Adds the ProgramStateManager as an observer to monitor any changes in this task.
         observe(this);
     }
@@ -180,6 +186,24 @@ public class Task extends Observable implements Serializable {
         this.deadline = deadline;
         //Update the last modified date to indicate that the task has been changed
         updateMetadata();
+    }
+
+    /**
+     * Gets whether a reminder has been sent
+     *
+     * @return boolean
+     */
+    public boolean getReminded() {
+        return reminded;
+    }
+
+    /**
+     * Sets whether a reminder has been sent
+     *
+     * @param sent
+     */
+    public void setReminded(boolean sent) {
+        reminded = sent;
     }
 
     /**
