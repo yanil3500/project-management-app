@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -49,6 +50,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
     public Panel(Task task) {
         this.task = task;
         this.task.setPanel(this);
+
     }
 
     //Copy constructor
@@ -68,6 +70,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
         height = initHeight;
         this.setLocation(xPos, yPos);
         this.setSize(width, height);
+
     }
 
     public String getLaneName() {
@@ -111,23 +114,14 @@ public class Panel extends JLabel implements Drawable, Serializable {
         //drawing Task information Strings
         String title = task.getTitle();
         String author = task.getAuthor();
-        String description = task.getDescription();
-        String deadline = task.getDeadline();
         g.setColor(Color.BLACK);
-        Font font = new Font("TimesRoman", Font.PLAIN, 12);
-        int rise = g.getFontMetrics(font).getAscent();
+        Font font = new Font("TimesRoman", Font.PLAIN, 10);
+        int titleRise = g.getFontMetrics(font).getAscent();
+//        int titleWidth = g.getFontMetrics(font).stringWidth(title);
+
         g.setFont(font);
         if (title != null) {
-            g.drawString(title, xPos + 5, yPos + 5 + rise);
-        }
-        if (author != null) {
-            g.drawString(author, xPos + 5, yPos + 10 + 2 * rise);
-        }
-        if (description != null) {
-            g.drawString(description, xPos + 5, yPos + 15 + 3 * rise);
-        }
-        if (deadline != null) {
-            g.drawString(deadline, xPos + 5, yPos + 20 + 4 * rise);
+            g.drawString(title, xPos + 5, yPos + 5 + titleRise);
         }
 
         //button font
@@ -135,7 +129,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
         g.setFont(buttonFont);
 
         //gets 'View Notes' string dimensions
-        String viewNotes = "View/Edit Notes";
+        String viewNotes = "Add/View/Edit Notes";
         int viewNotesRise = g.getFontMetrics(buttonFont).getAscent();
         int viewNotesWidth = g.getFontMetrics(buttonFont).stringWidth(viewNotes);
         g.setFont(buttonFont);
