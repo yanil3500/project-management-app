@@ -420,4 +420,19 @@ public class Task extends Observable implements Serializable {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", assignedTo='" + assignedTo + '\'' +
+                ", description='" + description + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", notes=" + notes +
+                ", metadata=" + metadata +
+                ", panel=" + panel +
+                ", reminded=" + reminded +
+                ", phoneNumbers=" + phoneNumbers +
+                '}';
+    }
 }

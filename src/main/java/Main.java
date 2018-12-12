@@ -66,34 +66,34 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
 
         //updating board with any existing tasks
         if (!ProgramStateManager.getInstance().doesPreviousStateExist()) {
-        //hardcoding Tasks for now
-        Task task1 = new Task("Task1 Test");
-        Task task2 = new Task("Task2 Test");
-        Task task3 = new Task("Task3 Test");
-        Task task4 = new Task("Task4 Test");
-        Task task5 = new Task("Task5 Test");
-        Task task6 = new Task("Task6 Test");
-        Panel p1 = new Panel(task1);
-        Panel p2 = new Panel(task2);
-        Panel p3 = new Panel(task3);
-        Panel p4 = new Panel(task4);
-        Panel p5 = new Panel(task5);
-        Panel p6 = new Panel(task6);
-        Lanes[0].addPanel(p1);
-        Lanes[1].addPanel(p2);
-        Lanes[2].addPanel(p3);
-        Lanes[0].addPanel(p4);
-        Lanes[1].addPanel(p5);
-        Lanes[2].addPanel(p6);
+            //hardcoding Tasks for now
+            Task task1 = new Task("Task1 Test");
+            Task task2 = new Task("Task2 Test");
+            Task task3 = new Task("Task3 Test");
+            Task task4 = new Task("Task4 Test");
+            Task task5 = new Task("Task5 Test");
+            Task task6 = new Task("Task6 Test");
+            Panel p1 = new Panel(task1);
+            Panel p2 = new Panel(task2);
+            Panel p3 = new Panel(task3);
+            Panel p4 = new Panel(task4);
+            Panel p5 = new Panel(task5);
+            Panel p6 = new Panel(task6);
+            Lanes[0].addPanel(p1);
+            Lanes[1].addPanel(p2);
+            Lanes[2].addPanel(p3);
+            Lanes[0].addPanel(p4);
+            Lanes[1].addPanel(p5);
+            Lanes[2].addPanel(p6);
 
-        for (int i = 0; i < 3; i++) {
-            List<Panel> panels = Lanes[i].getPanels();
-            for (Panel panel : panels) {
-                add(panel);
-                panel.addMouseListener(this);
-                panel.addMouseMotionListener(this);
+            for (int i = 0; i < 3; i++) {
+                List<Panel> panels = Lanes[i].getPanels();
+                for (Panel panel : panels) {
+                    add(panel);
+                    panel.addMouseListener(this);
+                    panel.addMouseMotionListener(this);
+                }
             }
-        }
 
 
         } else {
@@ -114,7 +114,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         }
         addMouseWheelListener(this);
         board.updatePanels();
-        Thread sendReminders = new Thread (new Runner());
+        Thread sendReminders = new Thread(new Runner());
         sendReminders.start();
     }
 
@@ -164,50 +164,55 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
         board.draw(g);
     }
 
-        class Runner implements Runnable {
-            Runner() {
-            }
+    class Runner implements Runnable {
+        Runner() {
+        }
 
-            @Override
-            public void run() {
-                while (true) {
-                    Date now = new Date();
-                    String deadline = null;
-                    Date deadlineDate = null;
-                    //reminder text to always be sent at 8 am
-                    int currentHour = java.time.LocalDateTime.now().getHour();
-                    if (currentHour == 8) {
-                        for (Lane l : Lanes) {
-                            for (Panel p : l.getPanels()) {
-                                Task t = p.getTask();
-                                //String[] phoneNumbers = t.getPhoneNumbers();
-                                //for now hard coding phone numbers
-                                String[] numbers = new String[1];
+        @Override
+        public void run() {
+            while (true) {
+                Date now = new Date();
+                String deadline = null;
+                Date deadlineDate = null;
+                //reminder text to always be sent at 8 am
+                int currentHour = java.time.LocalDateTime.now().getHour();
+                if (currentHour == 8) {
+                    for (Lane l : Lanes) {
+                        for (Panel p : l.getPanels()) {
+                            Task t = p.getTask();
+                            //String[] phoneNumbers = t.getPhoneNumbers();
+                            //for now hard coding phone numbers
+                            String[] numbers;
+                            if (!t.getPhoneNumbers().isEmpty()) {
+                                System.out.println("t = " + t);
+                                numbers = t.getPhoneNumbers().toArray(new String[t.getPhoneNumbers().size()]);
+                            } else {
+                                numbers = new String[1];
                                 numbers[0] = "+16154962253";
-                                //checks to see if reminder has already been sent
-                                if (t.getReminded() != true) {
-                                    deadline = t.getDeadline();
-                                    SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
-                                    //transform deadline to type Date
-                                    if (deadline != null) {
-                                        try {
-                                            deadlineDate = format.parse(deadline);
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
+                            }
+                            //checks to see if reminder has already been sent
+                            if (t.getReminded() != true) {
+                                deadline = t.getDeadline();
+                                SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                                //transform deadline to type Date
+                                if (deadline != null) {
+                                    try {
+                                        deadlineDate = format.parse(deadline);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
                                     }
-                                    if (deadlineDate != null) {
-                                        //transform current and deadline dates to type LocalDate
-                                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM dd kk:mm:ss zzz yyyy");
-                                        LocalDate today = LocalDate.parse(now.toString(), dtf);
-                                        LocalDate dead = LocalDate.parse(deadlineDate.toString(), dtf);
-                                        //obtain tomorrow's date
-                                        LocalDate tomorrow = today.plusDays(1);
-                                        //send SMS if deadline is tomorrow
-                                        if (dead.toString().equals(tomorrow.toString())) {
-                                            SmsSender.sendSMS("Don't forget! The deadline for your task, " + t.getTitle() + ", is tomorrow.", numbers);
-                                            t.setReminded(true);
-                                        }
+                                }
+                                if (deadlineDate != null) {
+                                    //transform current and deadline dates to type LocalDate
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM dd kk:mm:ss zzz yyyy");
+                                    LocalDate today = LocalDate.parse(now.toString(), dtf);
+                                    LocalDate dead = LocalDate.parse(deadlineDate.toString(), dtf);
+                                    //obtain tomorrow's date
+                                    LocalDate tomorrow = today.plusDays(1);
+                                    //send SMS if deadline is tomorrow
+                                    if (dead.toString().equals(tomorrow.toString())) {
+                                        SmsSender.sendSMS("Don't forget! The deadline for your task, " + t.getTitle() + ", is tomorrow.", numbers);
+                                        t.setReminded(true);
                                     }
                                 }
                             }
@@ -216,6 +221,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                 }
             }
         }
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
