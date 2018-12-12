@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 
 /**
@@ -163,7 +162,7 @@ public class Panel extends JLabel implements Drawable, Serializable {
         int viewTaskButtonHeight = viewTaskRise + 5;
         int viewTaskButtonWidth = viewTaskStringWidth + 5;
         g.setColor(Color.PINK);
-        g.fillRect(viewTaskButtonX, viewTaskButtonY,  viewTaskButtonWidth, viewTaskButtonHeight);
+        g.fillRect(viewTaskButtonX, viewTaskButtonY, viewTaskButtonWidth, viewTaskButtonHeight);
         viewTaskButtonDimensions = new ButtonDimensions(
                 viewTaskButtonX, //left wall of button
                 viewTaskButtonX + viewTaskButtonWidth, //right wall of button

@@ -76,7 +76,7 @@ public class ViewTaskForm extends JDialog {
         DefaultListModel model = new DefaultListModel();
 
         //Add phone numbers to model
-        for(String phoneNumber : task.getPhoneNumbers()){
+        for (String phoneNumber : task.getPhoneNumbers()) {
             model.addElement(phoneNumber);
         }
 
@@ -102,7 +102,7 @@ public class ViewTaskForm extends JDialog {
         deadlineDatePicker.add(dateTextField);
         //Setting default date for DatePicker
         String taskDeadline = task.getDeadline();
-        if(taskDeadline != null){
+        if (taskDeadline != null) {
             LocalDate date = DateTimeFormattingUtils.toLocalDate(taskDeadline);
             deadlineDatePicker.setDate(date);
         }
@@ -141,7 +141,7 @@ public class ViewTaskForm extends JDialog {
         phoneNumberList.setVisible(task.getPhoneNumbers().size() > 0);
 
         phoneNumberList.addListSelectionListener(listener -> {
-            if(listener.getValueIsAdjusting()){
+            if (listener.getValueIsAdjusting()) {
                 //makes 'Delete Phone #' button visible and operable.
                 deletePhoneNumberButton.setVisible(true);
                 deletePhoneNumberButton.setEnabled(true);
@@ -153,22 +153,25 @@ public class ViewTaskForm extends JDialog {
         phoneNumberFormattedField = new JFormattedTextField();
         phoneNumberFormattedField.setBackground(phoneNumberFormattedField.isVisible() ? Color.WHITE : Color.DARK_GRAY);
 
-        phoneNumberFormattedField.getDocument().addDocumentListener(new DocumentListener(){
+        phoneNumberFormattedField.getDocument().addDocumentListener(new DocumentListener() {
             //Regex is from Twilio
             //Here is the link: https://www.twilio.com/docs/glossary/what-e164
             String phoneNumberRegex = "^\\+?[1-9]\\d{1,14}$";
             Pattern pattern = Pattern.compile(phoneNumberRegex);
+
             public void changedUpdate(DocumentEvent e) {
 
             }
+
             public void removeUpdate(DocumentEvent e) {
                 addPhoneNumberButton.setEnabled(false);
             }
+
             public void insertUpdate(DocumentEvent e) {
                 String phoneNumberFormattedFieldText = phoneNumberFormattedField.getText();
-                if(phoneNumberFormattedField.isEditValid()){
+                if (phoneNumberFormattedField.isEditValid()) {
                     //Enable the 'Add Phone Number' button only if input is valid
-                    if(pattern.matcher(phoneNumberFormattedFieldText).matches()){
+                    if (pattern.matcher(phoneNumberFormattedFieldText).matches()) {
                         addPhoneNumberButton.setEnabled(true);
                     }
                 } else {
@@ -189,7 +192,7 @@ public class ViewTaskForm extends JDialog {
         deletePhoneNumberButton.addActionListener(evt -> {
             String phoneNumber = phoneNumberList.getSelectedValue();
             int index = phoneNumberList.getSelectedIndex();
-            if (phoneNumber ==  null || index < 0) {
+            if (phoneNumber == null || index < 0) {
                 System.out.print("No phone number selected.");
                 return;
             }
@@ -197,7 +200,7 @@ public class ViewTaskForm extends JDialog {
             if (choice == JOptionPane.YES_OPTION) {
                 task.deletePhoneNumber(index);
                 model.removeElement(phoneNumber);
-                if(this.task.getPhoneNumbers().isEmpty()){
+                if (this.task.getPhoneNumbers().isEmpty()) {
                     phoneNumberList.setVisible(false);
                     phoneNumberListScrollPane.setVisible(false);
                     deletePhoneNumberButton.setVisible(false);
@@ -358,9 +361,9 @@ public class ViewTaskForm extends JDialog {
 
                 char c = evt.getKeyChar();
                 boolean isDigit = c >= '0' && c <= '9';
-                if(c >= '0' && c <= '9'){
+                if (c >= '0' && c <= '9') {
                 }
-                if(phoneNumberFormattedField.getText().length() > 15){
+                if (phoneNumberFormattedField.getText().length() > 15) {
                     evt.consume();
                 }
 
@@ -374,21 +377,24 @@ public class ViewTaskForm extends JDialog {
         addPhoneNumberButton.setText("Add Phone #");
         addPhoneNumberButton.setEnabled(false);
         addPhoneNumberButton.addActionListener(evt -> {
-            if(phoneNumberFormattedField.isEditValid()){
+            if (phoneNumberFormattedField.isEditValid()) {
                 String phoneNumberFormattedFieldText = "+" + phoneNumberFormattedField.getText();
                 task.addPhoneNumber(phoneNumberFormattedFieldText);
-                if(!phoneNumberListScrollPane.isVisible()){
+                if (!phoneNumberListScrollPane.isVisible()) {
                     phoneNumberListScrollPane.setVisible(true);
                     phoneNumberList.setVisible(true);
                     pack();
                     repaint();
                 }
-                if(model.getSize() < 5){
+                if (model.getSize() < 5) {
                     model.addElement(phoneNumberFormattedFieldText);
                 }
             }
         });
         deletePhoneNumberButton.setText("Delete Phone #");
+
+        //EVERYTHING BELOW THIS COMMENT WAS NOT WRITTEN BY US; IT WAS ALL GENERATED BY THE GUI BUILDER IN NETBEANS.
+        //EVERYTHING ELSE, WAS WRITTEN BY US (E.G. ADDING EVENT LISTENERS, SETTING TEXT, ENABLING/DISABLING FIELDS)
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -537,7 +543,7 @@ public class ViewTaskForm extends JDialog {
     }
 
 
-    private void presentErrorMessage(JComponent field, String message, String dialogTitle){
+    private void presentErrorMessage(JComponent field, String message, String dialogTitle) {
         JOptionPane.showMessageDialog(this, message, dialogTitle, JOptionPane.ERROR_MESSAGE);
         field.requestFocus();
     }

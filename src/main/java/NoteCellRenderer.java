@@ -1,12 +1,12 @@
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
 
-
 /**
  * The <code>NoteCellRenderer</code> class dictates how the notes of a task are displayed.
+ * This tutorial was referenced during the construction of this class.
+ * Link: https://www.codejava.net/java-se/swing/jlist-custom-renderer-example
  */
 public class NoteCellRenderer extends JPanel implements ListCellRenderer<Note> {
 

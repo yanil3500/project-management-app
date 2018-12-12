@@ -156,7 +156,7 @@ public class Lane extends JComponent implements Drawable {
         gr.setFont(font);
         gr.drawString(title, xCoord + (xWidth - fontX) / 2, yCoord + (margin / 2 + fontY) / 2);
 
-        gr.setClip(xCoord, yCoord + margin/2, xWidth, yWidth - margin/2);
+        gr.setClip(xCoord, yCoord + margin / 2, xWidth, yWidth - margin / 2);
         for (Panel p : panels) {
             p.draw(gr);
         }

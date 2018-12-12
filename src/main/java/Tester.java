@@ -1,5 +1,6 @@
 import java.util.List;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The <code>Tester</code> class is used for testing the code written for this project.
@@ -102,7 +103,7 @@ public class Tester {
     /**
      * Tests that the Panel are saved to disk when their associated task is changed.
      */
-    public static void testPanelsAreSavedWhenAssociatedTasksChanged(){
+    public static void testPanelsAreSavedWhenAssociatedTasksChanged() {
         //Creates dummy tasks for Panel and sets its fields.
         Task t1 = new Task("Work on cracking the coding interview.");
         Task t2 = new Task("Apply for internships.");

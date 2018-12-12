@@ -1,5 +1,6 @@
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream

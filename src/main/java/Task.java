@@ -10,10 +10,10 @@ import java.util.Observable;
 /**
  * NOTE about Serializable: This class implements Serializable so that these types of objects can be converted into a byte stream
  * and saved onto disk.
- *
+ * <p>
  * NOTE about Observable: This class extends the Observable class so that these types objects can notify the ProgramStateManager
  * that their state has changed.
- *
+ * <p>
  * The Oracle docs for the Observable class were used during implementation.
  * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
@@ -72,7 +72,7 @@ public class Task extends Observable implements Serializable {
     private boolean reminded;
 
     /**
-     * Phone numbers to which reminder will be sent
+     * Phone numbers to which reminders will be sent.
      */
     private ArrayList<String> phoneNumbers;
 
@@ -94,9 +94,10 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Adds the ProgramStateManager as an observer to monitor any changes in the given task.
+     *
      * @param task
      */
-    public static void observe(Task task){
+    public static void observe(Task task) {
         //Reinstates the ProgramStateManager as an observer.
         task.addObserver(ProgramStateManager.getInstance());
     }
@@ -221,6 +222,7 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Get the panel to which this task is attached.
+     *
      * @return Panel.
      */
     public Panel getPanel() {
@@ -229,6 +231,7 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Changes the panel to which the task is attached.
+     *
      * @param panel
      */
     public void setPanel(Panel panel) {
@@ -336,6 +339,7 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Get the list of notes associated with the task.
+     *
      * @return
      */
     public ArrayList<Note> getNotes() {
@@ -344,9 +348,10 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Adds given phone number to the list of phone numbers.
+     *
      * @param phoneNumber
      */
-    public void addPhoneNumber(String phoneNumber){
+    public void addPhoneNumber(String phoneNumber) {
         if (phoneNumber == null) {
             return;
         }
@@ -357,9 +362,10 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Remove the phone number at the given index.
+     *
      * @param index
      */
-    public void deletePhoneNumber(int index){
+    public void deletePhoneNumber(int index) {
         if (index < 0 || index > phoneNumbers.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -371,6 +377,7 @@ public class Task extends Observable implements Serializable {
 
     /**
      * Gets the list of phone numbers associated with this task.
+     *
      * @return
      */
     public ArrayList<String> getPhoneNumbers() {

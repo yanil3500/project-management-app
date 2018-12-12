@@ -211,7 +211,7 @@ public class Main extends JPanel implements KeyListener, MouseListener, MouseMot
                                     LocalDate tomorrow = today.plusDays(1);
                                     //send SMS if deadline is tomorrow
                                     if (dead.toString().equals(tomorrow.toString())) {
-                                        SmsSender.sendSMS("Don't forget! The deadline for your task, " + t.getTitle() + ", is tomorrow.", numbers);
+                                        SMSSender.sendSMS("Don't forget! The deadline for your task, " + t.getTitle() + ", is tomorrow.", numbers);
                                         t.setReminded(true);
                                     }
                                 }
