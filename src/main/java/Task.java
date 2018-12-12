@@ -1,5 +1,6 @@
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
 
 
 /**
@@ -17,6 +18,12 @@ import java.util.*;
  * https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
  */
 public class Task extends Observable implements Serializable {
+
+    /**
+     * The max length of a title's task; The task must be 140 characters or less in length.
+     * This limit is completely arbitrary.
+     */
+    final static int TITLE_LENGTH_LIMIT = 140;
 
     /**
      * The name of the task's creator. This field can be left blank.
