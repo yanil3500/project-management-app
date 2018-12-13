@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * The <code>ViewNotesForm</code> class is responsible for presenting a GUI for the following three operations:
- * - Add/Remove a notes regarding a task.
+ * - Add/remove a note regarding a task.
  * - View existing notes.
  * - Edit existing notes.
  */
