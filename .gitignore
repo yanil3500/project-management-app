@@ -129,4 +129,10 @@ hs_err_pid*
 # ignores .txt files
 *.txt
 
+# ignore bin/
+bin/
+
+#ignore .project
+*.project
+
 # End of https://www.gitignore.io/api/java,intellij
