@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
  * <p>
  * The Oracle docs for the Observer interface were used during implementation.
  * Link: https://docs.oracle.com/javase/8/docs/api/index.html?java/util/Observer.html
+ * The following tutorial was also looked at during implementation:
+ * Link: https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/
  */
 public class ProgramStateManager implements Observer {
 
